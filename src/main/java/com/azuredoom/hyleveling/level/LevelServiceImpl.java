@@ -72,7 +72,7 @@ public class LevelServiceImpl implements LevelService {
     }
 
     /**
-     * Adds a specified amount of experience points (XP) to the player associated with the given ID. If adding XP
+     * Adds a specified number of experience points (XP) to the player associated with the given ID. If adding XP
      * results in the player leveling up, the appropriate level-up events are triggered. Notifications are sent to
      * registered listeners for both XP gain and level-up events, if applicable.
      *
@@ -96,7 +96,7 @@ public class LevelServiceImpl implements LevelService {
     }
 
     /**
-     * Removes a specified amount of experience points (XP) from the player identified by the given ID. If the reduction
+     * Removes a specified number of experience points (XP) from the player identified by the given ID. If the reduction
      * in XP results in a decrease in the player's level, the appropriate level-down events are triggered.
      *
      * @param id     The unique identifier (UUID) of the player whose XP is being reduced.
