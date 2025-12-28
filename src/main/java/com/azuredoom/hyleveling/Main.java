@@ -10,6 +10,9 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.UUID;
 
+/**
+ * TODO: Where to hook into Hytale events for awarding experience points?
+ */
 public class Main {
 
     public static final System.Logger LOGGER = System.getLogger(Main.class.getName());
@@ -34,11 +37,12 @@ public class Main {
 
         // TODO: Remove once hooks into the player/mob kill events are found and integrable.
         var testId = UUID.fromString("d3804858-4bb8-4026-ae21-386255ed467d");
-        levelService.setLevel(testId, 7);
+        levelService.addXp(testId, 500);
+        // TODO: Move to chat based logging instead of System loggers
         LOGGER.log(System.Logger.Level.INFO, String.format("XP: %d", levelService.getXp(testId)));
         LOGGER.log(System.Logger.Level.INFO, String.format("Level: %d", levelService.getLevel(testId)));
 
-        // TODO: Move to server shutdown
+        // TODO: Move to server shutdown so JDBC resources are properly closed
         Runtime.getRuntime().addShutdownHook(new Thread(repository::close));
     }
 }
