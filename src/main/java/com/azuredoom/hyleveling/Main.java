@@ -10,9 +10,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.UUID;
 
-/**
- * TODO: Where to hook into Hytale events for awarding experience points?
- */
 public class Main {
 
     public static final System.Logger LOGGER = System.getLogger(Main.class.getName());
