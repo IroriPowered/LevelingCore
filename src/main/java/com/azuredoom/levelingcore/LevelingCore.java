@@ -29,6 +29,7 @@ public class LevelingCore {
         levelingService = bootstrap.service();
     }
 
+    // TODO: Call this from the server shutdown hook
     public static void shutdown() {
         LOGGER.log(Level.INFO, "Leveling Core shutting down");
         try {
@@ -52,7 +53,6 @@ public class LevelingCore {
                 String.format("Level: %d", levelingService.getLevel(testId))
             );
         }
-        // TODO: Move to server shutdown so JDBC resources are properly closed
         LevelingCore.shutdown();
     }
 
