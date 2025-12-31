@@ -37,7 +37,7 @@ If relevant, include screenshots or code snippets demonstrating behavior before/
 
 Go over all the following items and check them before submitting your PR:
 
-- [ ] My code follows the project’s **code style**
+- [ ] My code follows the project’s **code style** (simply run `spotlessApply` to apply formatting)
 - [ ] I have performed a self-review of my own code
 - [ ] I have commented my code where necessary
 - [ ] My changes generate no new warnings
