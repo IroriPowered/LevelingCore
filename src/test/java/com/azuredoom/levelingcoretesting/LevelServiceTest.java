@@ -1,9 +1,11 @@
 package com.azuredoom.levelingcoretesting;
 
-import com.azuredoom.levelingcore.LevelingCore;
 import org.junit.jupiter.api.Test;
 
 import java.util.UUID;
+import java.util.logging.Level;
+
+import com.azuredoom.levelingcore.LevelingCore;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -12,6 +14,7 @@ class LevelServiceTest {
 
     @Test
     void addXp_increasesXpAndLevel() {
+        LevelingCore.init();
         var service = LevelingCore.getLevelService();
         var id = UUID.fromString("00000000-0000-0000-0000-000000000001");
         var amount = 500;
@@ -19,8 +22,8 @@ class LevelServiceTest {
         var beforeLevel = service.getLevel(id);
 
         service.addXp(id, amount);
-        LevelingCore.LOGGER.log(System.Logger.Level.INFO, String.format("XP: %d", service.getXp(id)));
-        LevelingCore.LOGGER.log(System.Logger.Level.INFO, String.format("Level: %d", service.getLevel(id)));
+        LevelingCore.LOGGER.log(Level.INFO, String.format("XP: %d", service.getXp(id)));
+        LevelingCore.LOGGER.log(Level.INFO, String.format("Level: %d", service.getLevel(id)));
 
         assertEquals(beforeXp + amount, service.getXp(id));
         assertTrue(service.getLevel(id) >= beforeLevel);

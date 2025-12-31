@@ -1,11 +1,11 @@
 package com.azuredoom.levelingcore.config;
 
-import com.azuredoom.levelingcore.exceptions.LevelingCoreException;
+import java.nio.file.Path;
+
 import com.azuredoom.levelingcore.database.DataSourceFactory;
 import com.azuredoom.levelingcore.database.JdbcLevelRepository;
+import com.azuredoom.levelingcore.exceptions.LevelingCoreException;
 import com.azuredoom.levelingcore.level.LevelServiceImpl;
-
-import java.nio.file.Path;
 
 /**
  * ConfigBootstrap is a utility class that initializes and configures the core components of the LevelingCore system.

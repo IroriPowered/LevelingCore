@@ -1,17 +1,17 @@
 package com.azuredoom.levelingcore.level;
 
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+
 import com.azuredoom.levelingcore.database.JdbcLevelRepository;
 import com.azuredoom.levelingcore.events.*;
 import com.azuredoom.levelingcore.level.formulas.LevelFormula;
 import com.azuredoom.levelingcore.playerdata.PlayerLevelData;
 
-import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
-
 /**
- * Used for managing player levels and experience points (XP).
- * This class provides methods to retrieve, modify, and calculate levels and XP for individual players.
- * It also supports notifying listeners for level-up, level-down, XP gain, and XP loss events.
+ * Used for managing player levels and experience points (XP). This class provides methods to retrieve, modify, and
+ * calculate levels and XP for individual players. It also supports notifying listeners for level-up, level-down, XP
+ * gain, and XP loss events.
  */
 public class LevelServiceImpl {
 

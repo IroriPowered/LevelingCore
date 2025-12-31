@@ -1,9 +1,9 @@
 package com.azuredoom.levelingcore.api;
 
+import java.util.Optional;
+
 import com.azuredoom.levelingcore.LevelingCore;
 import com.azuredoom.levelingcore.level.LevelServiceImpl;
-
-import java.util.Optional;
 
 public final class LevelingCoreApi {
 

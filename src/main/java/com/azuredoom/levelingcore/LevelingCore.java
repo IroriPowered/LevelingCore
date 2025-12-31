@@ -1,51 +1,59 @@
 package com.azuredoom.levelingcore;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.UUID;
+import java.util.logging.*;
+
 import com.azuredoom.levelingcore.api.LevelingCoreApi;
 import com.azuredoom.levelingcore.config.ConfigBootstrap;
 import com.azuredoom.levelingcore.exceptions.LevelingCoreException;
 import com.azuredoom.levelingcore.level.LevelServiceImpl;
-
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.UUID;
+import com.azuredoom.levelingcore.logging.LogConfig;
 
 public class LevelingCore {
 
-    public static final System.Logger LOGGER = System.getLogger(LevelingCore.class.getName());
+    public static final Logger LOGGER = LogConfig.setup(LevelingCore.class);
 
     public static final Path configPath = Paths.get("./data/plugins/levelingcore/");
 
     private static final ConfigBootstrap.Bootstrap bootstrap = ConfigBootstrap.bootstrap(configPath);
 
-    private static LevelServiceImpl levelingService = bootstrap.service();
+    private static LevelServiceImpl levelingService;
 
     public LevelingCore() {}
 
     // TODO: Call this from the server startup hook
     public static void init() {
-        LOGGER.log(System.Logger.Level.INFO, "Leveling Core initialized");
+        LOGGER.log(Level.INFO, "Leveling Core initialized");
         levelingService = bootstrap.service();
     }
 
+    public static void shutdown() {
+        LOGGER.log(Level.INFO, "Leveling Core shutting down");
+        try {
+            LevelingCore.bootstrap.closeable().close();
+        } catch (Exception e) {
+            throw new LevelingCoreException("Failed to close resources", e);
+        }
+    }
+
     static void main() {
+        LevelingCore.init();
         // TODO: Remove once hooks into the player/mob kill events are found and integrable.
         var testId = UUID.fromString("d3804858-4bb8-4026-ae21-386255ed467d");
         if (LevelingCoreApi.getLevelServiceIfPresent().isPresent()) {
             var levelingService = LevelingCoreApi.getLevelServiceIfPresent().get();
             levelingService.addXp(testId, 500);
             // TODO: Move to chat based logging instead of System loggers
-            LevelingCore.LOGGER.log(System.Logger.Level.INFO, String.format("XP: %d", levelingService.getXp(testId)));
+            LevelingCore.LOGGER.log(Level.INFO, String.format("XP: %d", levelingService.getXp(testId)));
             LevelingCore.LOGGER.log(
-                System.Logger.Level.INFO,
+                Level.INFO,
                 String.format("Level: %d", levelingService.getLevel(testId))
             );
         }
         // TODO: Move to server shutdown so JDBC resources are properly closed
-        try {
-            LevelingCore.bootstrap.closeable().close();
-        } catch (Exception e) {
-            throw new LevelingCoreException("Failed to close resources", e);
-        }
+        LevelingCore.shutdown();
     }
 
     /**

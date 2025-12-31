@@ -1,12 +1,15 @@
 package com.azuredoom.levelingcore.config;
 
-import com.azuredoom.levelingcore.exceptions.LevelingCoreException;
 import org.yaml.snakeyaml.LoaderOptions;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.Constructor;
 
 import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
+import java.util.logging.Level;
+
+import com.azuredoom.levelingcore.LevelingCore;
+import com.azuredoom.levelingcore.exceptions.LevelingCoreException;
 
 /**
  * ConfigManager is a utility class responsible for managing the configuration of the LevelingCore system. It handles
@@ -45,7 +48,10 @@ public final class ConfigManager {
                             "default.yml not found in resources (expected at /default.yml)"
                         );
                     }
+                    LevelingCore.LOGGER.log(Level.INFO, "Creating default config at {0}", configPath);
                     Files.copy(in, configPath, StandardCopyOption.REPLACE_EXISTING);
+                } catch (Exception e) {
+                    throw new LevelingCoreException("Failed to create default config", e);
                 }
             }
 
@@ -55,6 +61,7 @@ public final class ConfigManager {
             var yaml = new Yaml(new Constructor(LevelingCoreConfig.class, opts));
             try (var reader = Files.newBufferedReader(configPath, StandardCharsets.UTF_8)) {
                 LevelingCoreConfig cfg = yaml.load(reader);
+                LevelingCore.LOGGER.log(Level.INFO, "Loaded config from {0}", configPath);
                 return (cfg != null) ? cfg : new LevelingCoreConfig();
             }
 

@@ -1,8 +1,9 @@
 package com.azuredoom.levelingcore.database;
 
-import com.azuredoom.levelingcore.exceptions.DataSourceConfigurationException;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
+
+import com.azuredoom.levelingcore.exceptions.DataSourceConfigurationException;
 
 /**
  * A factory class for creating and configuring database connection pools using HikariCP.

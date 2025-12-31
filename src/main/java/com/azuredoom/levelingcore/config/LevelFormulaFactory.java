@@ -1,18 +1,18 @@
 package com.azuredoom.levelingcore.config;
 
-import com.azuredoom.levelingcore.exceptions.LevelingCoreException;
-import com.azuredoom.levelingcore.level.formulas.CustomExpressionLevelFormula;
-import com.azuredoom.levelingcore.level.formulas.ExponentialLevelFormula;
-import com.azuredoom.levelingcore.level.formulas.LevelFormula;
-import com.azuredoom.levelingcore.level.formulas.LinearLevelFormula;
-import com.azuredoom.levelingcore.level.formulas.loader.LevelTableLoader;
-
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.stream.Collectors;
+
+import com.azuredoom.levelingcore.exceptions.LevelingCoreException;
+import com.azuredoom.levelingcore.level.formulas.CustomExpressionLevelFormula;
+import com.azuredoom.levelingcore.level.formulas.ExponentialLevelFormula;
+import com.azuredoom.levelingcore.level.formulas.LevelFormula;
+import com.azuredoom.levelingcore.level.formulas.LinearLevelFormula;
+import com.azuredoom.levelingcore.level.formulas.loader.LevelTableLoader;
 
 /**
  * A factory class for creating instances of {@link LevelFormula} and related objects based on configuration or

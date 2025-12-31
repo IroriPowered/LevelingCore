@@ -1,9 +1,10 @@
 package com.azuredoom.levelingcore.level.formulas;
 
-import com.azuredoom.levelingcore.exceptions.LevelingCoreException;
 import net.objecthunter.exp4j.ExpressionBuilder;
 
 import java.util.Map;
+
+import com.azuredoom.levelingcore.exceptions.LevelingCoreException;
 
 /**
  * A customizable implementation of the {@link LevelFormula} interface that allows XP-to-level calculations using a

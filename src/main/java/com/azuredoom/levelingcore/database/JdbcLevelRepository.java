@@ -1,23 +1,25 @@
 package com.azuredoom.levelingcore.database;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import java.util.UUID;
+import java.util.logging.Level;
+import javax.sql.DataSource;
+
 import com.azuredoom.levelingcore.LevelingCore;
-import com.azuredoom.levelingcore.exceptions.LevelingCoreException;
 import com.azuredoom.levelingcore.config.FormulaDescriptor;
 import com.azuredoom.levelingcore.config.LevelFormulaFactory;
+import com.azuredoom.levelingcore.exceptions.LevelingCoreException;
 import com.azuredoom.levelingcore.level.formulas.LevelFormula;
 import com.azuredoom.levelingcore.playerdata.PlayerLevelData;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.Statement;
-import java.util.UUID;
-import javax.sql.DataSource;
-
 /**
- * A repository implementation for managing player leveling data and metadata in a database using JDBC.
- * This class provides methods for creating the necessary tables, storing, updating, migrating, and retrieving
- * player-related data, such as experience points (XP) and metadata key-value pairs. It abstracts
- * database operations and ensures consistent data handling for the player leveling system.
+ * A repository implementation for managing player leveling data and metadata in a database using JDBC. This class
+ * provides methods for creating the necessary tables, storing, updating, migrating, and retrieving player-related data,
+ * such as experience points (XP) and metadata key-value pairs. It abstracts database operations and ensures consistent
+ * data handling for the player leveling system.
  */
 public class JdbcLevelRepository {
 
@@ -180,8 +182,8 @@ public class JdbcLevelRepository {
     public void migrateFormulaIfNeeded(LevelFormula newFormula, FormulaDescriptor newDesc) {
         createMetaTableIfNotExists();
 
-        String oldType = metaGet("formula.type");
-        String oldParams = metaGet("formula.params");
+        var oldType = metaGet("formula.type");
+        var oldParams = metaGet("formula.params");
 
         if (oldType == null || oldParams == null) {
             metaPut("formula.type", newDesc.type());
@@ -197,49 +199,91 @@ public class JdbcLevelRepository {
             new FormulaDescriptor(oldType, oldParams)
         );
 
-        var select = "SELECT player_id, xp FROM player_levels";
-        var update = "UPDATE player_levels SET xp = ? WHERE player_id = ?";
+        LevelingCore.LOGGER.log(Level.INFO, "Starting formula migration to {0}", newDesc.type());
+
+        final var select = "SELECT player_id, xp FROM player_levels";
+
+        final var createTemp =
+            "CREATE TEMP TABLE IF NOT EXISTS tmp_player_xp (" +
+                "  player_id UUID PRIMARY KEY," +
+                "  xp BIGINT" +
+                ")";
+        final var truncateTemp = "TRUNCATE TABLE tmp_player_xp";
+        final var insertTemp = "INSERT INTO tmp_player_xp (player_id, xp) VALUES (?, ?)";
 
         try (var c = dataSource.getConnection()) {
             c.setAutoCommit(false);
 
+            try (var st = c.createStatement()) {
+                st.execute("SET WRITE_DELAY 1000");
+                st.execute("SET LOCK_MODE 0");
+            } catch (Exception ignored) {}
+
+            final var levelToNewXp = new java.util.HashMap<Integer, Long>(1024);
+
+            try (var st = c.createStatement()) {
+                st.execute(createTemp);
+                st.execute(truncateTemp);
+            }
+
             try (
-                var psSel = c.prepareStatement(select);
-                var rs = psSel.executeQuery();
-                var psUpd = c.prepareStatement(update)
+                var psSel = c.prepareStatement(
+                    select,
+                    ResultSet.TYPE_FORWARD_ONLY,
+                    ResultSet.CONCUR_READ_ONLY
+                );
+                var psIns = c.prepareStatement(insertTemp)
             ) {
+                psSel.setFetchSize(10_000);
 
                 var batch = 0;
+                var processed = 0;
 
-                while (rs.next()) {
-                    var playerId = rs.getString("player_id");
-                    var oldXp = rs.getLong("xp");
+                try (var rs = psSel.executeQuery()) {
+                    while (rs.next()) {
+                        var playerId = rs.getObject(1, UUID.class);
+                        var oldXp = rs.getLong(2);
 
-                    var level = oldFormula.getLevelForXp(oldXp);
-                    var newXp = newFormula.getXpForLevel(level);
+                        var level = oldFormula.getLevelForXp(oldXp);
 
-                    psUpd.setLong(1, newXp);
-                    psUpd.setString(2, playerId);
-                    psUpd.addBatch();
+                        Long newXpObj = levelToNewXp.get(level);
+                        long newXp;
+                        if (newXpObj != null) {
+                            newXp = newXpObj;
+                        } else {
+                            newXp = newFormula.getXpForLevel(level);
+                            levelToNewXp.put(level, newXp);
+                        }
 
-                    batch++;
-                    if (batch >= 1000) {
-                        psUpd.executeBatch();
-                        batch = 0;
+                        psIns.setObject(1, playerId);
+                        psIns.setLong(2, newXp);
+                        psIns.addBatch();
+
+                        if (++batch >= 10_000) {
+                            psIns.executeBatch();
+                            batch = 0;
+                        }
+
+                        processed++;
+                        if ((processed % 50_000) == 0) {
+                            LevelingCore.LOGGER.log(Level.INFO, "Migration staging progress: {0} rows", processed);
+                        }
                     }
                 }
 
                 if (batch > 0) {
-                    psUpd.executeBatch();
+                    psIns.executeBatch();
                 }
             }
 
             c.commit();
-            LevelingCore.LOGGER.log(System.Logger.Level.INFO, "Migration completed");
+
+            LevelingCore.LOGGER.log(Level.INFO, "Formula migration completed successfully");
         } catch (Exception e) {
             throw new LevelingCoreException("Failed to migrate XP to preserve levels", e);
         }
 
+        // Only update meta after successful commit
         metaPut("formula.type", newDesc.type());
         metaPut("formula.params", newDesc.params());
     }
@@ -353,6 +397,7 @@ public class JdbcLevelRepository {
     public void close() {
         try {
             if (dataSource instanceof AutoCloseable c) {
+                LevelingCore.LOGGER.log(Level.INFO, "Closing JDBC datasource");
                 c.close();
             }
         } catch (Exception e) {
