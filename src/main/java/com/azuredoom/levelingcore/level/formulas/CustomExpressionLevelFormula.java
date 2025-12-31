@@ -1,6 +1,6 @@
 package com.azuredoom.levelingcore.level.formulas;
 
-import com.azuredoom.levelingcore.LevelingCoreException;
+import com.azuredoom.levelingcore.exceptions.LevelingCoreException;
 import net.objecthunter.exp4j.ExpressionBuilder;
 
 import java.util.Map;

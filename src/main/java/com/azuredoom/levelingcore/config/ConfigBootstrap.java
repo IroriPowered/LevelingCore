@@ -1,9 +1,8 @@
 package com.azuredoom.levelingcore.config;
 
-import com.azuredoom.levelingcore.LevelingCoreException;
+import com.azuredoom.levelingcore.exceptions.LevelingCoreException;
 import com.azuredoom.levelingcore.database.DataSourceFactory;
 import com.azuredoom.levelingcore.database.JdbcLevelRepository;
-import com.azuredoom.levelingcore.level.LevelService;
 import com.azuredoom.levelingcore.level.LevelServiceImpl;
 
 import java.nio.file.Path;
@@ -25,7 +24,7 @@ public final class ConfigBootstrap {
      * to simplify the return of multiple related objects from the bootstrap process.
      */
     public record Bootstrap(
-        LevelService service,
+        LevelServiceImpl service,
         AutoCloseable closeable
     ) {}
 

@@ -1,7 +1,7 @@
 package com.azuredoom.levelingcore.database;
 
 import com.azuredoom.levelingcore.LevelingCore;
-import com.azuredoom.levelingcore.LevelingCoreException;
+import com.azuredoom.levelingcore.exceptions.LevelingCoreException;
 import com.azuredoom.levelingcore.config.FormulaDescriptor;
 import com.azuredoom.levelingcore.config.LevelFormulaFactory;
 import com.azuredoom.levelingcore.level.formulas.LevelFormula;
@@ -14,11 +14,12 @@ import java.util.UUID;
 import javax.sql.DataSource;
 
 /**
- * Implementation of the {@link LevelRepository} interface using JDBC for data persistence. This repository manages the
- * storage and retrieval of player level data in a relational database. The implementation provides methods for saving,
- * loading, checking the existence of, and closing resources related to player level data.
+ * A repository implementation for managing player leveling data and metadata in a database using JDBC.
+ * This class provides methods for creating the necessary tables, storing, updating, migrating, and retrieving
+ * player-related data, such as experience points (XP) and metadata key-value pairs. It abstracts
+ * database operations and ensures consistent data handling for the player leveling system.
  */
-public class JdbcLevelRepository implements LevelRepository {
+public class JdbcLevelRepository {
 
     private final DataSource dataSource;
 
@@ -259,7 +260,6 @@ public class JdbcLevelRepository implements LevelRepository {
      *             updated accordingly.
      * @throws LevelingCoreException if any database operation fails, such as connection issues or invalid SQL.
      */
-    @Override
     public void save(PlayerLevelData data) {
         var updateSql = "UPDATE player_levels SET xp = ? WHERE player_id = ?";
         var insertSql = "INSERT INTO player_levels (player_id, xp) VALUES (?, ?)";
@@ -295,7 +295,6 @@ public class JdbcLevelRepository implements LevelRepository {
      *         exists for the given UUID.
      * @throws LevelingCoreException if any database operation fails, such as connection issues or invalid SQL.
      */
-    @Override
     public PlayerLevelData load(UUID id) {
         var sql = "SELECT xp FROM player_levels WHERE player_id = ?";
 
@@ -326,7 +325,6 @@ public class JdbcLevelRepository implements LevelRepository {
      * @return {@code true} if a record exists for the given UUID; {@code false} otherwise.
      * @throws LevelingCoreException if any database operation fails, such as connection issues or invalid SQL.
      */
-    @Override
     public boolean exists(UUID id) {
         var sql = "SELECT 1 FROM player_levels WHERE player_id = ?";
 
@@ -352,7 +350,6 @@ public class JdbcLevelRepository implements LevelRepository {
      *
      * @throws LevelingCoreException if an error occurs while closing the {@code dataSource}.
      */
-    @Override
     public void close() {
         try {
             if (dataSource instanceof AutoCloseable c) {

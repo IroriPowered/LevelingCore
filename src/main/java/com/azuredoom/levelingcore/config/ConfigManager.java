@@ -1,6 +1,6 @@
 package com.azuredoom.levelingcore.config;
 
-import com.azuredoom.levelingcore.LevelingCoreException;
+import com.azuredoom.levelingcore.exceptions.LevelingCoreException;
 import org.yaml.snakeyaml.LoaderOptions;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.Constructor;

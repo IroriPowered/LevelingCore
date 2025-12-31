@@ -1,7 +1,7 @@
 package com.azuredoom.levelingcore.level.formulas.loader;
 
 import com.azuredoom.levelingcore.LevelingCore;
-import com.azuredoom.levelingcore.LevelingCoreException;
+import com.azuredoom.levelingcore.exceptions.LevelingCoreException;
 import com.azuredoom.levelingcore.level.formulas.TableLevelFormula;
 
 import java.nio.charset.StandardCharsets;

@@ -1,7 +1,7 @@
 package com.azuredoom.levelingcore.api;
 
 import com.azuredoom.levelingcore.LevelingCore;
-import com.azuredoom.levelingcore.level.LevelService;
+import com.azuredoom.levelingcore.level.LevelServiceImpl;
 
 import java.util.Optional;
 
@@ -10,13 +10,13 @@ public final class LevelingCoreApi {
     private LevelingCoreApi() {}
 
     /**
-     * Retrieves the {@link LevelService} instance if it is available and returns it as an {@code Optional}. This allows
-     * safely handling scenarios where the leveling service might not be initialized.
+     * Retrieves the {@link LevelServiceImpl} instance if it is available and returns it as an {@code Optional}. This
+     * allows safely handling scenarios where the leveling service might not be initialized.
      *
-     * @return an {@code Optional} containing the {@link LevelService} instance if available; otherwise, an empty
+     * @return an {@code Optional} containing the {@link LevelServiceImpl} instance if available; otherwise, an empty
      *         {@code Optional}.
      */
-    public static Optional<LevelService> getLevelServiceIfPresent() {
+    public static Optional<LevelServiceImpl> getLevelServiceIfPresent() {
         return Optional.ofNullable(LevelingCore.getLevelService());
     }
 }

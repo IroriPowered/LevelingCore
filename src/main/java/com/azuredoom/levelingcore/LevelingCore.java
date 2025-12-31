@@ -2,13 +2,13 @@ package com.azuredoom.levelingcore;
 
 import com.azuredoom.levelingcore.api.LevelingCoreApi;
 import com.azuredoom.levelingcore.config.ConfigBootstrap;
-import com.azuredoom.levelingcore.level.LevelService;
+import com.azuredoom.levelingcore.exceptions.LevelingCoreException;
+import com.azuredoom.levelingcore.level.LevelServiceImpl;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.UUID;
 
-// TODO: Implement leveling core functionality to Hytale Server API
 public class LevelingCore {
 
     public static final System.Logger LOGGER = System.getLogger(LevelingCore.class.getName());
@@ -17,9 +17,15 @@ public class LevelingCore {
 
     private static final ConfigBootstrap.Bootstrap bootstrap = ConfigBootstrap.bootstrap(configPath);
 
-    private static final LevelService levelingService = bootstrap.service();
+    private static LevelServiceImpl levelingService = bootstrap.service();
 
     public LevelingCore() {}
+
+    // TODO: Call this from the server startup hook
+    public static void init() {
+        LOGGER.log(System.Logger.Level.INFO, "Leveling Core initialized");
+        levelingService = bootstrap.service();
+    }
 
     static void main() {
         // TODO: Remove once hooks into the player/mob kill events are found and integrable.
@@ -43,12 +49,12 @@ public class LevelingCore {
     }
 
     /**
-     * Retrieves the {@link LevelService} instance managed by the {@code LevelingCore} class. The {@code LevelService}
-     * provides methods for managing player levels and experience points (XP).
+     * Retrieves the {@link LevelServiceImpl} instance managed by the {@code LevelingCore} class. The
+     * {@code LevelService} provides methods for managing player levels and experience points (XP).
      *
-     * @return the {@link LevelService} instance used by the leveling system.
+     * @return the {@link LevelServiceImpl} instance used by the leveling system.
      */
-    public static LevelService getLevelService() {
+    public static LevelServiceImpl getLevelService() {
         return levelingService;
     }
 }

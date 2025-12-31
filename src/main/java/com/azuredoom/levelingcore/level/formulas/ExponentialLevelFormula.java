@@ -1,6 +1,6 @@
 package com.azuredoom.levelingcore.level.formulas;
 
-import com.azuredoom.levelingcore.LevelingCoreException;
+import com.azuredoom.levelingcore.exceptions.LevelingCoreException;
 
 /**
  * Implementation of the LevelFormula interface that calculates XP and level values using an exponential formula. This

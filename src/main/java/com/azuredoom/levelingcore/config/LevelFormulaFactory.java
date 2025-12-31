@@ -1,6 +1,6 @@
 package com.azuredoom.levelingcore.config;
 
-import com.azuredoom.levelingcore.LevelingCoreException;
+import com.azuredoom.levelingcore.exceptions.LevelingCoreException;
 import com.azuredoom.levelingcore.level.formulas.CustomExpressionLevelFormula;
 import com.azuredoom.levelingcore.level.formulas.ExponentialLevelFormula;
 import com.azuredoom.levelingcore.level.formulas.LevelFormula;

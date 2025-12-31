@@ -1,4 +1,4 @@
-package com.azuredoom.levelingcore;
+package com.azuredoom.levelingcore.exceptions;
 
 public class LevelingCoreException extends RuntimeException {
 

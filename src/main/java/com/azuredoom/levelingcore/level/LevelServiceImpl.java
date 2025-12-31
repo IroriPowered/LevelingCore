@@ -1,6 +1,6 @@
 package com.azuredoom.levelingcore.level;
 
-import com.azuredoom.levelingcore.database.LevelRepository;
+import com.azuredoom.levelingcore.database.JdbcLevelRepository;
 import com.azuredoom.levelingcore.events.*;
 import com.azuredoom.levelingcore.level.formulas.LevelFormula;
 import com.azuredoom.levelingcore.playerdata.PlayerLevelData;
@@ -9,15 +9,15 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * Implementation of the LevelService interface for managing player levels and experience points (XP). This class is
- * responsible for handling the retrieval, modification, and storage of player level data, as well as notifying
- * registered listeners for level-up, level-down, XP gain, and XP loss events.
+ * Used for managing player levels and experience points (XP).
+ * This class provides methods to retrieve, modify, and calculate levels and XP for individual players.
+ * It also supports notifying listeners for level-up, level-down, XP gain, and XP loss events.
  */
-public class LevelServiceImpl implements LevelService {
+public class LevelServiceImpl {
 
     private final LevelFormula formula;
 
-    private final LevelRepository repository;
+    private final JdbcLevelRepository repository;
 
     private final Map<UUID, PlayerLevelData> cache = new ConcurrentHashMap<>();
 
@@ -29,7 +29,7 @@ public class LevelServiceImpl implements LevelService {
 
     private final List<XpLossListener> xpLossListeners = new ArrayList<>();
 
-    public LevelServiceImpl(LevelFormula formula, LevelRepository repository) {
+    public LevelServiceImpl(LevelFormula formula, JdbcLevelRepository repository) {
         this.formula = formula;
         this.repository = repository;
     }
@@ -55,7 +55,6 @@ public class LevelServiceImpl implements LevelService {
      * @param id The unique identifier (UUID) of the player whose experience points are being retrieved.
      * @return The total XP of the player as a long.
      */
-    @Override
     public long getXp(UUID id) {
         return get(id).getXp();
     }
@@ -66,12 +65,10 @@ public class LevelServiceImpl implements LevelService {
      * @param id The unique identifier (UUID) of the player whose level is being retrieved.
      * @return The player's level as an integer, calculated from their XP.
      */
-    @Override
     public int getLevel(UUID id) {
         return formula.getLevelForXp(get(id).getXp());
     }
 
-    @Override
     public void addLevel(UUID id, int level) {
         if (level == 0) {
             return;
@@ -97,7 +94,6 @@ public class LevelServiceImpl implements LevelService {
         }
     }
 
-    @Override
     public void removeLevel(UUID id, int level) {
         if (level <= 0) {
             throw new IllegalArgumentException("level must be greater than 0");
@@ -129,7 +125,6 @@ public class LevelServiceImpl implements LevelService {
      * @param level    The target level to set for the player. If the value provided is less than 1, it defaults to 1.
      * @return The new level of the player after the operation.
      */
-    @Override
     public int setLevel(UUID playerId, int level) {
         var targetLevel = Math.max(level, 1);
 
@@ -157,7 +152,6 @@ public class LevelServiceImpl implements LevelService {
      * @param level The target level for which the required XP is being calculated. Must be a positive integer.
      * @return The total XP required to reach the specified level. Returns 0 for level 1 or below.
      */
-    @Override
     public long getXpForLevel(int level) {
         if (level <= 1) {
             return 0L;
@@ -174,7 +168,6 @@ public class LevelServiceImpl implements LevelService {
      * @param id     The unique identifier (UUID) of the player whose XP is being modified.
      * @param amount The amount of XP to be added to the player's current XP balance.
      */
-    @Override
     public void addXp(UUID id, long amount) {
         var data = get(id);
         var oldLevel = getLevel(id);
@@ -196,7 +189,6 @@ public class LevelServiceImpl implements LevelService {
      * @param id     The unique identifier (UUID) of the player whose XP is being reduced.
      * @param amount The amount of XP to remove from the player's total.
      */
-    @Override
     public void removeXp(UUID id, long amount) {
         var data = get(id);
         var oldLevel = getLevel(id);
@@ -218,7 +210,6 @@ public class LevelServiceImpl implements LevelService {
      * @param id The unique identifier (UUID) of the player whose XP is being set.
      * @param xp The new experience points (XP) value to assign to the player.
      */
-    @Override
     public void setXp(UUID id, long xp) {
         var data = get(id);
         var oldLevel = getLevel(id);
@@ -240,7 +231,6 @@ public class LevelServiceImpl implements LevelService {
      *
      * @param listener The {@link LevelDownListener} to be registered for receiving level-down notifications.
      */
-    @Override
     public void registerLevelDownListener(LevelDownListener listener) {
         levelDownListeners.add(listener);
     }
@@ -251,7 +241,6 @@ public class LevelServiceImpl implements LevelService {
      *
      * @param listener The {@link LevelUpListener} to be registered for receiving notifications about level-up events.
      */
-    @Override
     public void registerLevelUpListener(LevelUpListener listener) {
         levelUpListeners.add(listener);
     }
@@ -262,7 +251,6 @@ public class LevelServiceImpl implements LevelService {
      *
      * @param listener The {@link XpGainListener} to be registered for receiving XP gain notifications.
      */
-    @Override
     public void registerXpGainListener(XpGainListener listener) {
         xpGainListeners.add(listener);
     }
@@ -273,7 +261,6 @@ public class LevelServiceImpl implements LevelService {
      *
      * @param listener The {@link XpLossListener} to be registered for receiving XP loss notifications.
      */
-    @Override
     public void registerXpLossListener(XpLossListener listener) {
         xpLossListeners.add(listener);
     }
