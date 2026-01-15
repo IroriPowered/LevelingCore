@@ -76,12 +76,14 @@ public class GainXPEventSystem extends DeathSystems.OnDeathSystem {
                 var maxHealth = healthStat.getMax();
                 var xpAmount = Math.max(1, (long) (maxHealth * this.config.get().getDefaultXPGainPercentage()));
                 LevelingCoreApi.getLevelServiceIfPresent().ifPresent(levelService -> {
-                    int levelBefore = levelService.getLevel(player.getUuid());
-                    levelService.addXp(player.getUuid(), xpAmount);
-                    player.sendMessage(CommandLang.GAINED.param("xp", xpAmount));
-                    int levelAfter = levelService.getLevel(player.getUuid());
+                    var levelBefore = levelService.getLevel(player.getUuid());
+                        levelService.addXp(player.getUuid(), xpAmount);
+                        if (config.get().isEnableXPChatMsgs())
+                            player.sendMessage(CommandLang.GAINED.param("xp", xpAmount));
+                    var levelAfter = levelService.getLevel(player.getUuid());
                     if (levelAfter > levelBefore) {
-                        player.sendMessage(CommandLang.LEVEL_UP.param("level", levelAfter));
+                        if (config.get().isEnableLevelChatMsgs())
+                            player.sendMessage(CommandLang.LEVEL_UP.param("level", levelAfter));
                     }
                 });
             }

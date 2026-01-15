@@ -6,11 +6,13 @@ import com.hypixel.hytale.server.core.command.system.arguments.system.RequiredAr
 import com.hypixel.hytale.server.core.command.system.arguments.types.ArgTypes;
 import com.hypixel.hytale.server.core.command.system.basecommands.CommandBase;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
+import com.hypixel.hytale.server.core.util.Config;
 import com.hypixel.hytale.server.core.util.EventTitleUtil;
 
 import javax.annotation.Nonnull;
 
 import com.azuredoom.levelingcore.api.LevelingCoreApi;
+import com.azuredoom.levelingcore.config.GUIConfig;
 import com.azuredoom.levelingcore.lang.CommandLang;
 
 /**
@@ -23,8 +25,11 @@ public class CheckLevelCommand extends CommandBase {
     @Nonnull
     private final RequiredArg<PlayerRef> playerArg;
 
-    public CheckLevelCommand() {
+    private final Config<GUIConfig> config;
+
+    public CheckLevelCommand(Config<GUIConfig> config) {
         super("checklevel", "Check level of player");
+        this.config = config;
         this.playerArg = this.withRequiredArg(
             "player",
             "server.commands.levelingcore.checklevel.desc",
@@ -42,7 +47,8 @@ public class CheckLevelCommand extends CommandBase {
         var playerUUID = playerRef.getUuid();
         var levelRef = LevelingCoreApi.getLevelServiceIfPresent().get().getLevel(playerUUID);
         var currentLevelMsg = CommandLang.CHECK_LEVEL.param("player", playerRef.getUsername()).param("level", levelRef);
-        EventTitleUtil.showEventTitleToPlayer(playerRef, currentLevelMsg, Message.raw(""), true);
+        if (config.get().isEnableLevelAndXPTitles())
+            EventTitleUtil.showEventTitleToPlayer(playerRef, currentLevelMsg, Message.raw(""), true);
         commandContext.sendMessage(currentLevelMsg);
     }
 }

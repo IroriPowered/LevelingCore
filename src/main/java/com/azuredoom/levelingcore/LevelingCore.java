@@ -58,12 +58,12 @@ public class LevelingCore extends JavaPlugin {
         this.config.save();
         LOGGER.at(Level.INFO).log("Leveling Core initializing");
         levelingService = bootstrap.service();
-        getCommandRegistry().registerCommand(new AddLevelCommand());
-        getCommandRegistry().registerCommand(new CheckLevelCommand());
-        getCommandRegistry().registerCommand(new AddXpCommand());
-        getCommandRegistry().registerCommand(new SetLevelCommand());
-        getCommandRegistry().registerCommand(new RemoveLevelCommand());
-        getCommandRegistry().registerCommand(new RemoveXpCommand());
+        getCommandRegistry().registerCommand(new AddLevelCommand(config));
+        getCommandRegistry().registerCommand(new CheckLevelCommand(config));
+        getCommandRegistry().registerCommand(new AddXpCommand(config));
+        getCommandRegistry().registerCommand(new SetLevelCommand(config));
+        getCommandRegistry().registerCommand(new RemoveLevelCommand(config));
+        getCommandRegistry().registerCommand(new RemoveXpCommand(config));
         getEntityStoreRegistry().registerSystem(new XPTickSystem());
         getEntityStoreRegistry().registerSystem(new GainXPEventSystem(config));
         getEntityStoreRegistry().registerSystem(new LossXPEventSystem(config));

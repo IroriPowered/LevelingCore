@@ -5,11 +5,13 @@ import com.hypixel.hytale.server.core.command.system.arguments.system.RequiredAr
 import com.hypixel.hytale.server.core.command.system.arguments.types.ArgTypes;
 import com.hypixel.hytale.server.core.command.system.basecommands.CommandBase;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
+import com.hypixel.hytale.server.core.util.Config;
 import com.hypixel.hytale.server.core.util.EventTitleUtil;
 
 import javax.annotation.Nonnull;
 
 import com.azuredoom.levelingcore.api.LevelingCoreApi;
+import com.azuredoom.levelingcore.config.GUIConfig;
 import com.azuredoom.levelingcore.lang.CommandLang;
 
 /**
@@ -26,8 +28,11 @@ public class AddXpCommand extends CommandBase {
     @Nonnull
     private final RequiredArg<Integer> xpArg;
 
-    public AddXpCommand() {
+    private final Config<GUIConfig> config;
+
+    public AddXpCommand(Config<GUIConfig> config) {
         super("addxp", "Add XP to player");
+        this.config = config;
         this.playerArg = this.withRequiredArg(
             "player",
             "server.commands.levelingcore.addlevel.desc",
@@ -49,7 +54,8 @@ public class AddXpCommand extends CommandBase {
         var level = LevelingCoreApi.getLevelServiceIfPresent().get().getLevel(playerUUID);
         var setXPMsg = CommandLang.ADD_XP_1.param("xp", xpRef).param("player", playerRef.getUsername());
         var levelTotalMsg = CommandLang.ADD_XP_2.param("player", playerRef.getUsername()).param("level", level);
-        EventTitleUtil.showEventTitleToPlayer(playerRef, levelTotalMsg, setXPMsg, true);
+        if (config.get().isEnableLevelAndXPTitles())
+            EventTitleUtil.showEventTitleToPlayer(playerRef, levelTotalMsg, setXPMsg, true);
         commandContext.sendMessage(setXPMsg);
         commandContext.sendMessage(levelTotalMsg);
     }

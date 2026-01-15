@@ -5,11 +5,13 @@ import com.hypixel.hytale.server.core.command.system.arguments.system.RequiredAr
 import com.hypixel.hytale.server.core.command.system.arguments.types.ArgTypes;
 import com.hypixel.hytale.server.core.command.system.basecommands.CommandBase;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
+import com.hypixel.hytale.server.core.util.Config;
 import com.hypixel.hytale.server.core.util.EventTitleUtil;
 
 import javax.annotation.Nonnull;
 
 import com.azuredoom.levelingcore.api.LevelingCoreApi;
+import com.azuredoom.levelingcore.config.GUIConfig;
 import com.azuredoom.levelingcore.lang.CommandLang;
 
 /**
@@ -26,8 +28,11 @@ public class RemoveXpCommand extends CommandBase {
     @Nonnull
     private final RequiredArg<Integer> xpArg;
 
-    public RemoveXpCommand() {
+    private final Config<GUIConfig> config;
+
+    public RemoveXpCommand(Config<GUIConfig> config) {
         super("removexp", "Remove XP from player");
+        this.config = config;
         this.playerArg = this.withRequiredArg(
             "player",
             "server.commands.levelingcore.addlevel.desc",
@@ -49,7 +54,8 @@ public class RemoveXpCommand extends CommandBase {
         var level = LevelingCoreApi.getLevelServiceIfPresent().get().getLevel(playerUUID);
         var removedXPMsg = CommandLang.REMOVE_XP_1.param("xp", xpRef).param("player", playerRef.getUsername());
         var levelTotalMsg = CommandLang.REMOVE_XP_2.param("player", playerRef.getUsername()).param("level", level);
-        EventTitleUtil.showEventTitleToPlayer(playerRef, levelTotalMsg, removedXPMsg, true);
+        if (config.get().isEnableLevelAndXPTitles())
+            EventTitleUtil.showEventTitleToPlayer(playerRef, levelTotalMsg, removedXPMsg, true);
         commandContext.sendMessage(removedXPMsg);
         commandContext.sendMessage(levelTotalMsg);
     }

@@ -5,11 +5,13 @@ import com.hypixel.hytale.server.core.command.system.arguments.system.RequiredAr
 import com.hypixel.hytale.server.core.command.system.arguments.types.ArgTypes;
 import com.hypixel.hytale.server.core.command.system.basecommands.CommandBase;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
+import com.hypixel.hytale.server.core.util.Config;
 import com.hypixel.hytale.server.core.util.EventTitleUtil;
 
 import javax.annotation.Nonnull;
 
 import com.azuredoom.levelingcore.api.LevelingCoreApi;
+import com.azuredoom.levelingcore.config.GUIConfig;
 import com.azuredoom.levelingcore.lang.CommandLang;
 
 /**
@@ -26,8 +28,11 @@ public class AddLevelCommand extends CommandBase {
     @Nonnull
     private final RequiredArg<Integer> levelArg;
 
-    public AddLevelCommand() {
+    private final Config<GUIConfig> config;
+
+    public AddLevelCommand(Config<GUIConfig> config) {
         super("addlevel", "Add level to player");
+        this.config = config;
         this.playerArg = this.withRequiredArg(
             "player",
             "player to add levels to",
@@ -50,7 +55,8 @@ public class AddLevelCommand extends CommandBase {
         var addLevelMsg = levelRef == 1 ? CommandLang.ADD_LEVEL_1 : CommandLang.ADD_LEVEL_2;
         var finalAddLevelMsg = addLevelMsg.param("level", levelRef).param("player", playerRef.getUsername());
         var playerLevelNowMsg = CommandLang.ADD_LEVEL_3.param("player", playerRef.getUsername()).param("level", level);
-        EventTitleUtil.showEventTitleToPlayer(playerRef, playerLevelNowMsg, finalAddLevelMsg, true);
+        if (config.get().isEnableLevelAndXPTitles())
+            EventTitleUtil.showEventTitleToPlayer(playerRef, playerLevelNowMsg, finalAddLevelMsg, true);
         commandContext.sendMessage(finalAddLevelMsg);
         commandContext.sendMessage(playerLevelNowMsg);
     }

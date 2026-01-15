@@ -55,6 +55,24 @@ public class GUIConfig {
             (exConfig, extraInfo) -> exConfig.minLevelForLevelDown
         )
         .add()
+        .append(
+            new KeyedCodec<Boolean>("EnableLevelChatMsgs", Codec.BOOLEAN),
+            (exConfig, aDouble, extraInfo) -> exConfig.enableLevelChatMsgs = aDouble,
+            (exConfig, extraInfo) -> exConfig.enableLevelChatMsgs
+        )
+        .add()
+        .append(
+            new KeyedCodec<Boolean>("EnableXPChatMsgs", Codec.BOOLEAN),
+            (exConfig, aDouble, extraInfo) -> exConfig.enableXPChatMsgs = aDouble,
+            (exConfig, extraInfo) -> exConfig.enableXPChatMsgs
+        )
+        .add()
+        .append(
+            new KeyedCodec<Boolean>("EnableLevelAndXPTitles", Codec.BOOLEAN),
+            (exConfig, aDouble, extraInfo) -> exConfig.enableLevelAndXPTitles = aDouble,
+            (exConfig, extraInfo) -> exConfig.enableLevelAndXPTitles
+        )
+        .add()
         .build();
 
     private boolean enableXPLossOnDeath = false;
@@ -70,6 +88,12 @@ public class GUIConfig {
     private boolean enableAllLevelsLostOnDeath = false;
 
     private int minLevelForLevelDown = 65;
+
+    private boolean enableLevelChatMsgs = false;
+
+    private boolean enableXPChatMsgs = true;
+
+    private boolean enableLevelAndXPTitles = true;
 
     public GUIConfig() {}
 
@@ -134,5 +158,32 @@ public class GUIConfig {
      */
     public boolean isEnableAllLevelsLostOnDeath() {
         return enableAllLevelsLostOnDeath;
+    }
+
+    /**
+     * Determines whether the level-related chat messages are enabled in the configuration.
+     *
+     * @return {@code true} if level chat messages are enabled, otherwise {@code false}.
+     */
+    public boolean isEnableLevelChatMsgs() {
+        return enableLevelChatMsgs;
+    }
+
+    /**
+     * Determines whether the experience points (XP) related chat messages are enabled in the configuration.
+     *
+     * @return {@code true} if XP chat messages are enabled, otherwise {@code false}.
+     */
+    public boolean isEnableXPChatMsgs() {
+        return enableXPChatMsgs;
+    }
+
+    /**
+     * Determines whether level and experience point (XP) titles are enabled in the configuration.
+     *
+     * @return {@code true} if level and XP titles are enabled, otherwise {@code false}.
+     */
+    public boolean isEnableLevelAndXPTitles() {
+        return enableLevelAndXPTitles;
     }
 }
