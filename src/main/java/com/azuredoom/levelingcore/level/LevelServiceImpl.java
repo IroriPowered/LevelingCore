@@ -236,6 +236,16 @@ public class LevelServiceImpl {
     }
 
     /**
+     * Retrieves the list of registered {@link LevelDownListener} instances. These listeners are notified whenever a
+     * player's level decreases due to specific actions or conditions in the system.
+     *
+     * @return A list of {@link LevelDownListener} objects currently registered to receive level-down notifications.
+     */
+    public List<LevelDownListener> getLevelDownListeners() {
+        return levelDownListeners;
+    }
+
+    /**
      * Registers a listener to be notified of events when a player levels up. When a player's level increases, the
      * registered listener's {@code onLevelUp} method will be invoked.
      *
@@ -243,6 +253,16 @@ public class LevelServiceImpl {
      */
     public void registerLevelUpListener(LevelUpListener listener) {
         levelUpListeners.add(listener);
+    }
+
+    /**
+     * Retrieves the list of registered {@link LevelUpListener} instances. These listeners are notified whenever a
+     * player's level increases due to specific actions or conditions in the system.
+     *
+     * @return A list of {@link LevelUpListener} objects currently registered to receive level-up notifications.
+     */
+    public List<LevelUpListener> getLevelUpListeners() {
+        return levelUpListeners;
     }
 
     /**
@@ -256,6 +276,16 @@ public class LevelServiceImpl {
     }
 
     /**
+     * Retrieves the list of registered {@link XpGainListener} instances. These listeners are notified whenever a player
+     * gains experience points (XP) due to specific actions or events in the system.
+     *
+     * @return A list of {@link XpGainListener} objects currently registered to handle XP gain notifications.
+     */
+    public List<XpGainListener> getXpGainListeners() {
+        return xpGainListeners;
+    }
+
+    /**
      * Registers a listener to be notified of events when a player loses experience points (XP). The listener's
      * {@code onXpLoss} method will be triggered whenever a player loses XP in the system.
      *
@@ -263,6 +293,16 @@ public class LevelServiceImpl {
      */
     public void registerXpLossListener(XpLossListener listener) {
         xpLossListeners.add(listener);
+    }
+
+    /**
+     * Retrieves the list of registered {@link XpLossListener} instances. These listeners are notified whenever a player
+     * loses experience points (XP) due to specific actions or conditions in the system.
+     *
+     * @return A list of {@link XpLossListener} objects currently registered to receive XP loss notifications.
+     */
+    public List<XpLossListener> getXpLossListeners() {
+        return xpLossListeners;
     }
 
     /**
