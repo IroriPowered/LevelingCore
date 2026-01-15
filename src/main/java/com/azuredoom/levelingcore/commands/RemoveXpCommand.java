@@ -45,7 +45,6 @@ public class RemoveXpCommand extends CommandBase {
         var playerRef = this.playerArg.get(commandContext);
         var xpRef = this.xpArg.get(commandContext);
         var playerUUID = playerRef.getUuid();
-        LevelingCoreApi.getLevelServiceIfPresent().get().addXp(playerUUID, xpRef);
         var removedXPMsg = "Removed " + xpRef + " xp to " + playerRef.getUsername();
         var levelTotalMsg = "Player " + playerRef.getUsername() + " is now level " + LevelingCoreApi
             .getLevelServiceIfPresent()
@@ -54,5 +53,6 @@ public class RemoveXpCommand extends CommandBase {
         EventTitleUtil.showEventTitleToPlayer(playerRef, Message.raw(levelTotalMsg), Message.raw(removedXPMsg), true);
         commandContext.sendMessage(Message.raw(removedXPMsg));
         commandContext.sendMessage(Message.raw(levelTotalMsg));
+        LevelingCoreApi.getLevelServiceIfPresent().get().removeXp(playerUUID, xpRef);
     }
 }
