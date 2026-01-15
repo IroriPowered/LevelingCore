@@ -1,5 +1,6 @@
 package com.azuredoom.levelingcore;
 
+import com.azuredoom.levelingcore.hud.XPTickSystem;
 import com.hypixel.hytale.logger.HytaleLogger;
 import com.hypixel.hytale.server.core.plugin.JavaPlugin;
 import com.hypixel.hytale.server.core.plugin.JavaPluginInit;
@@ -63,6 +64,7 @@ public class LevelingCore extends JavaPlugin {
         getCommandRegistry().registerCommand(new SetLevelCommand());
         getCommandRegistry().registerCommand(new RemoveLevelCommand());
         getCommandRegistry().registerCommand(new RemoveXpCommand());
+        getEntityStoreRegistry().registerSystem(new XPTickSystem());
         getEntityStoreRegistry().registerSystem(new GainXPEventSystem(config));
         getEntityStoreRegistry().registerSystem(new LossXPEventSystem(config));
     }

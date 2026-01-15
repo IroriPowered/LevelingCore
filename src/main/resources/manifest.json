@@ -11,7 +11,8 @@
     "Website": "https://azuredoom.com/",
     "ServerVersion": "*",
     "Dependencies": {
-        "Hytale:EntityModule": "*"
+        "Hytale:EntityModule": "*",
+        "Buuz135:MultipleHUD": "*"
     },
     "OptionalDependencies": {
         
