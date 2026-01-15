@@ -1,3 +1,12 @@
+v0.2.0
+- Added new config options.
+  - enableLevelChatMsgs ( default: false): Enables level up chat messages. 
+  - enableXPChatMsgs ( default: true): Enables XP gain chat messages. 
+  - enableLevelAndXPTitles ( default: true): Enables level up and XP gain title messages. 
+  - enableSimplePartyXPShareCompat ( default: true): Enables compatibility with the Simple Party mod to share XP in parties.
+- Added optional support for the Simple Party XP Share mod to share XP between party members.
+- Added a fallback if the MultipleHUD mod is not installed, with a warning message and log to install it if want UI to work correctly with other mods.
+
 v0.1.2
 - Fixed a bug where the default.yml would have the wrong comment link for H2
 - Fixed a bug where /removexp would ADD XP instead of removing it. Whoops.
