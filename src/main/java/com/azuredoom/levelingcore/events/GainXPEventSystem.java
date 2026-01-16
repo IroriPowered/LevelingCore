@@ -12,6 +12,7 @@ import com.hypixel.hytale.server.core.modules.entity.damage.DeathSystems;
 import com.hypixel.hytale.server.core.modules.entitystats.EntityStatMap;
 import com.hypixel.hytale.server.core.modules.entitystats.asset.EntityStatType;
 import com.hypixel.hytale.server.core.plugin.PluginManager;
+import com.hypixel.hytale.server.core.universe.Universe;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.hypixel.hytale.server.core.util.Config;
 
@@ -21,6 +22,7 @@ import com.azuredoom.levelingcore.api.LevelingCoreApi;
 import com.azuredoom.levelingcore.compat.SimplePartyCompat;
 import com.azuredoom.levelingcore.config.GUIConfig;
 import com.azuredoom.levelingcore.lang.CommandLang;
+import com.azuredoom.levelingcore.utils.NotificationsUtil;
 
 /**
  * The {@code GainXPEventSystem} class handles the process of awarding experience points (XP) to players based on
@@ -69,6 +71,9 @@ public class GainXPEventSystem extends DeathSystems.OnDeathSystem {
                 var player = store.getComponent(attackerRef, Player.getComponentType());
                 if (player == null)
                     return;
+                var playerRef = Universe.get().getPlayer(player.getUuid());
+                if (ref == player.getReference())
+                    return;
                 var statMap = store.getComponent(ref, EntityStatMap.getComponentType());
                 if (statMap == null)
                     return;
@@ -83,12 +88,11 @@ public class GainXPEventSystem extends DeathSystems.OnDeathSystem {
                     // Checks that the SimpleParty plugin is installed
                     if (PluginManager.get().getPlugin(new PluginIdentifier("net.justmadlime", "SimpleParty")) != null) {
                         // INFO: Handle XP gain for SimpleParty plugin when it's installed
-                        SimplePartyCompat.onXPGain(xpAmount, player.getUuid(), levelService, config, player);
+                        SimplePartyCompat.onXPGain(xpAmount, player.getUuid(), levelService, config, player, playerRef);
                     } else {
                         // Fallback to default XP gain if SimpleParty is not installed
+                        NotificationsUtil.sendNotification(playerRef, "Gained " + xpAmount + " XP");
                         levelService.addXp(player.getUuid(), xpAmount);
-                        if (config.get().isEnableXPChatMsgs())
-                            player.sendMessage(CommandLang.GAINED.param("xp", xpAmount));
                     }
                     var levelAfter = levelService.getLevel(player.getUuid());
                     if (levelAfter > levelBefore) {

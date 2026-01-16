@@ -1,6 +1,7 @@
 package com.azuredoom.levelingcore.compat;
 
 import com.hypixel.hytale.server.core.entity.entities.Player;
+import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.util.Config;
 import net.justmadlime.SimpleParty.party.PartyManager;
 
@@ -8,8 +9,8 @@ import java.util.Arrays;
 import java.util.UUID;
 
 import com.azuredoom.levelingcore.config.GUIConfig;
-import com.azuredoom.levelingcore.lang.CommandLang;
 import com.azuredoom.levelingcore.level.LevelServiceImpl;
+import com.azuredoom.levelingcore.utils.NotificationsUtil;
 
 /**
  * Utility class to provide compatibility for handling XP gain in a party.
@@ -31,16 +32,19 @@ public class SimplePartyCompat {
         UUID playerUuid,
         LevelServiceImpl levelService,
         Config<GUIConfig> config,
-        Player player
+        Player player,
+        PlayerRef playerRef
     ) {
         var party = PartyManager.getInstance().getPartyFromPlayer(playerUuid);
         if (party != null && config.get().isEnableSimplePartyXPShareCompat()) {
             Arrays.stream(party.getAllPartyMembers())
                 .distinct()
-                .forEach(uuid -> levelService.addXp(uuid, xp));
+                .forEach(uuid -> {
+                    NotificationsUtil.sendNotification(playerRef, "Gained " + xp + " XP");
+                    levelService.addXp(uuid, xp);
+                });
         } else {
-            if (config.get().isEnableXPChatMsgs())
-                player.sendMessage(CommandLang.GAINED.param("xp", xp));
+            NotificationsUtil.sendNotification(playerRef, "Gained " + xp + " XP");
             levelService.addXp(playerUuid, xp);
         }
     }
