@@ -1,5 +1,6 @@
 package com.azuredoom.levelingcore.hud;
 
+import com.azuredoom.levelingcore.config.GUIConfig;
 import com.buuz135.mhud.MultipleHUD;
 import com.hypixel.hytale.common.plugin.PluginIdentifier;
 import com.hypixel.hytale.component.ArchetypeChunk;
@@ -14,6 +15,7 @@ import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.plugin.PluginManager;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
+import com.hypixel.hytale.server.core.util.Config;
 import org.checkerframework.checker.nullness.compatqual.NonNullDecl;
 import org.checkerframework.checker.nullness.compatqual.NullableDecl;
 
@@ -24,7 +26,11 @@ import com.azuredoom.levelingcore.api.LevelingCoreApi;
 
 public class XPTickSystem extends EntityTickingSystem<EntityStore> {
 
-    public XPTickSystem() {}
+    private final Config<GUIConfig> config;
+
+    public XPTickSystem(Config<GUIConfig> config) {
+        this.config = config;
+    }
 
     @Override
     public void tick(
@@ -41,7 +47,7 @@ public class XPTickSystem extends EntityTickingSystem<EntityStore> {
             return;
         }
         LevelingCoreApi.getLevelServiceIfPresent().ifPresent(levelService1 -> {
-            var xpHud = new XPBarHud(playerRef, levelService1);
+            var xpHud = new XPBarHud(playerRef, levelService1, config);
             if (PluginManager.get().getPlugin(new PluginIdentifier("Buuz135", "MultipleHUD")) != null) {
                 MultipleHUD.getInstance().setCustomHud(player, playerRef, "levelingcore_xpbar", xpHud);
             } else {

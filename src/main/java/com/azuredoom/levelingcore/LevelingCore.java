@@ -64,7 +64,7 @@ public class LevelingCore extends JavaPlugin {
         getCommandRegistry().registerCommand(new SetLevelCommand(config));
         getCommandRegistry().registerCommand(new RemoveLevelCommand(config));
         getCommandRegistry().registerCommand(new RemoveXpCommand(config));
-        getEntityStoreRegistry().registerSystem(new XPTickSystem());
+        getEntityStoreRegistry().registerSystem(new XPTickSystem(config));
         getEntityStoreRegistry().registerSystem(new GainXPEventSystem(config));
         getEntityStoreRegistry().registerSystem(new LossXPEventSystem(config));
     }

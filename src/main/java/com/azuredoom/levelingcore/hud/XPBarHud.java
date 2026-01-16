@@ -1,9 +1,11 @@
 package com.azuredoom.levelingcore.hud;
 
+import com.azuredoom.levelingcore.config.GUIConfig;
 import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.entity.entities.player.hud.CustomUIHud;
 import com.hypixel.hytale.server.core.ui.builder.UICommandBuilder;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
+import com.hypixel.hytale.server.core.util.Config;
 import org.checkerframework.checker.nullness.compatqual.NonNullDecl;
 
 import com.azuredoom.levelingcore.level.LevelServiceImpl;
@@ -12,9 +14,12 @@ public class XPBarHud extends CustomUIHud {
 
     private LevelServiceImpl levelServiceImpl;
 
-    public XPBarHud(@NonNullDecl PlayerRef playerRef, @NonNullDecl LevelServiceImpl levelServiceImpl) {
+    private final Config<GUIConfig> config;
+
+    public XPBarHud(@NonNullDecl PlayerRef playerRef, @NonNullDecl LevelServiceImpl levelServiceImpl, Config<GUIConfig> config) {
         super(playerRef);
         this.levelServiceImpl = levelServiceImpl;
+        this.config = config;
     }
 
     @Override
@@ -34,7 +39,17 @@ public class XPBarHud extends CustomUIHud {
         var progress = (double) xpIntoLevel / xpNeededThisLevel;
 
         uiCommandBuilder.set("#ProgressBar.Value", progress);
-        uiCommandBuilder.set("#Level.TextSpans", Message.raw("LVL " + currentLevel));
+        if (config.get().isShowXPAmountInHUD()) {
+            uiCommandBuilder.set(
+                    "#Level.TextSpans",
+                    Message.raw("LVL: " + currentLevel + "   " + "XP: " + currentXp + " / " + xpForNextLevel)
+            );
+        } else {
+            uiCommandBuilder.set(
+                    "#Level.TextSpans",
+                    Message.raw("LVL: " + currentLevel)
+            );
+        }
         update(false, uiCommandBuilder); // false = don't clear existing UI
     }
 }

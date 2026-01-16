@@ -79,6 +79,12 @@ public class GUIConfig {
             (exConfig, extraInfo) -> exConfig.enableSimplePartyXPShareCompat
         )
         .add()
+        .append(
+            new KeyedCodec<Boolean>("ShowXPAmountInHUD", Codec.BOOLEAN),
+            (exConfig, aDouble, extraInfo) -> exConfig.showXPAmountInHUD = aDouble,
+            (exConfig, extraInfo) -> exConfig.showXPAmountInHUD
+        )
+        .add()
         .build();
 
     private boolean enableXPLossOnDeath = false;
@@ -102,6 +108,8 @@ public class GUIConfig {
     private boolean enableLevelAndXPTitles = true;
 
     private boolean enableSimplePartyXPShareCompat = true;
+
+    private boolean showXPAmountInHUD = false;
 
     public GUIConfig() {}
 
@@ -202,5 +210,9 @@ public class GUIConfig {
      */
     public boolean isEnableSimplePartyXPShareCompat() {
         return enableSimplePartyXPShareCompat;
+    }
+
+    public boolean isShowXPAmountInHUD() {
+        return showXPAmountInHUD;
     }
 }

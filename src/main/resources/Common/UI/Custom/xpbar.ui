@@ -1,33 +1,28 @@
 $Hotbar = "Hotbar.ui";
 Group {
   LayoutMode: Bottom;
-  Anchor: (Bottom: 36 + 74 + 24 + 6, Width: 630, Height: 12);
+  Anchor: (Bottom: 36 + 74 + 24 + 6, Width: 634, Height: 12);
 
   Label #Level {
-    Anchor: (Left: 0, Width: 48, Height: 24, Right: 4, Top: -6);
+    Anchor: (Left: 0, Width: 4, Height: 24, Right: 4, Top: -6);
     Style: (FontSize: 16, Alignment: Center);
     Text: "MyText";
   }
 
   Group {
-    LayoutMode: Left;
-
-    Group #Icon {
-      Anchor: (Left: -32, Width: 24, Height: 24, Right: 4, Top: -8);
-      Background: "XPIcon.png";
-    }
+    LayoutMode: Middle;
 
     Group {
-      Anchor: (Left: 0, Width: 314, Height: 12);
+      Anchor: (Left: 0, Width: 634, Height: 12);
       Background: "XPBackground.png";
 
       ProgressBar #ProgressBar {
-        Anchor: (Width: 310, Height: 12);
+        Anchor: (Width: 634, Height: 12);
         BarTexturePath: "XPFill.png";
       }
 
       ProgressBar #ProgressBarEffect {
-        Anchor: (Width: 310, Height: 12);
+        Anchor: (Width: 634, Height: 12);
         BarTexturePath: "XPEffect.png";
       }
     }
