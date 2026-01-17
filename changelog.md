@@ -1,3 +1,10 @@
+v0.3.0
+- Implemented a new xp bar UI (Thanks to kiyo for texture and suggestions!)
+- Implemented stats increase on level up and stat decreases on level down. (Config option to disable this if you don't like it)
+- Updated commands to be proper player commands with permissions. (Was op only before but not has proper permissions)
+- Moved XP gain chat messages to a notification system.
+- Fixed a bug where PVP would result in XP gain.
+
 v0.2.0
 - Added new config options.
   - enableLevelChatMsgs ( default: false): Enables level up chat messages. 
