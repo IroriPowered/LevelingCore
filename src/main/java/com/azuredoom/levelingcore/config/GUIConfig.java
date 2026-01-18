@@ -115,6 +115,18 @@ public class GUIConfig {
             (exConfig, extraInfo) -> exConfig.enableStatHealing
         )
         .add()
+        .append(
+            new KeyedCodec<String>("LevelUpSound", Codec.STRING),
+            (exConfig, aString, extraInfo) -> exConfig.levelUpSound = aString,
+            (exConfig, extraInfo) -> exConfig.levelUpSound
+        )
+        .add()
+        .append(
+            new KeyedCodec<String>("LevelDownSound", Codec.STRING),
+            (exConfig, aString, extraInfo) -> exConfig.levelDownSound = aString,
+            (exConfig, extraInfo) -> exConfig.levelDownSound
+        )
+        .add()
         .build();
 
     private boolean enableXPLossOnDeath = false;
@@ -150,6 +162,10 @@ public class GUIConfig {
     private float manaLevelUpMultiplier = 0.6F;
 
     private boolean enableStatHealing = true;
+
+    private String levelUpSound = "SFX_Divine_Respawn";
+
+    private String levelDownSound = "SFX_Divine_Respawn";
 
     public GUIConfig() {}
 
@@ -304,5 +320,13 @@ public class GUIConfig {
      */
     public boolean isEnableStatHealing() {
         return enableStatHealing;
+    }
+
+    public String getLevelUpSound() {
+        return levelUpSound;
+    }
+
+    public String getLevelDownSound() {
+        return levelDownSound;
     }
 }
