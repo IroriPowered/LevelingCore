@@ -1,3 +1,9 @@
+v0.4.0
+- Implemented stat healing on level up (Config option to disable this if you don't like it)
+- Added a level up sound, with a config option to change it. (Default: SFX_Divine_Respawn)
+- Added a level down sound, with a config option to change it. (Default: SFX_Divine_Respawn)
+- Added a config option to use XP mappings from config instead of health defaults. (Default: true)
+
 v0.3.0
 - Implemented a new xp bar UI (Thanks to kiyo for texture and suggestions!)
 - Implemented stats increase on level up and stat decreases on level down. (Config option to disable this if you don't like it)
