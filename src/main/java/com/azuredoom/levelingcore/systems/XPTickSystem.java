@@ -1,18 +1,14 @@
-package com.azuredoom.levelingcore.hud;
+package com.azuredoom.levelingcore.systems;
 
 import com.hypixel.hytale.common.plugin.PluginIdentifier;
 import com.hypixel.hytale.component.*;
 import com.hypixel.hytale.component.query.Query;
 import com.hypixel.hytale.component.system.tick.EntityTickingSystem;
-import com.hypixel.hytale.protocol.SoundCategory;
 import com.hypixel.hytale.server.core.Message;
-import com.hypixel.hytale.server.core.asset.type.soundevent.config.SoundEvent;
 import com.hypixel.hytale.server.core.entity.EntityUtils;
 import com.hypixel.hytale.server.core.entity.entities.Player;
-import com.hypixel.hytale.server.core.modules.entity.EntityModule;
 import com.hypixel.hytale.server.core.plugin.PluginManager;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
-import com.hypixel.hytale.server.core.universe.world.SoundUtil;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.hypixel.hytale.server.core.util.Config;
 import org.checkerframework.checker.nullness.compatqual.NonNullDecl;
@@ -24,7 +20,7 @@ import com.azuredoom.levelingcore.LevelingCore;
 import com.azuredoom.levelingcore.api.LevelingCoreApi;
 import com.azuredoom.levelingcore.compat.MultipleHudCompat;
 import com.azuredoom.levelingcore.config.GUIConfig;
-import com.azuredoom.levelingcore.utils.StatsUtils;
+import com.azuredoom.levelingcore.hud.XPBarHud;
 
 public class XPTickSystem extends EntityTickingSystem<EntityStore> {
 
@@ -48,10 +44,6 @@ public class XPTickSystem extends EntityTickingSystem<EntityStore> {
         if (player == null || playerRef == null) {
             return;
         }
-        var world = player.getWorld();
-        var world_store = world.getEntityStore();
-        var levelup_sound = SoundEvent.getAssetMap().getIndex(config.get().getLevelUpSound());
-        var leveldown_sound = SoundEvent.getAssetMap().getIndex(config.get().getLevelDownSound());
         LevelingCoreApi.getLevelServiceIfPresent().ifPresent(levelService1 -> {
             var xpHud = new XPBarHud(playerRef, levelService1, config);
             if (PluginManager.get().getPlugin(new PluginIdentifier("Buuz135", "MultipleHUD")) != null) {
@@ -65,41 +57,6 @@ public class XPTickSystem extends EntityTickingSystem<EntityStore> {
                 LevelingCore.LOGGER.at(Level.WARNING)
                     .log("MultipleHUD not found, XP HUD will not work correctly with other mods adding custom UI");
                 player.getHudManager().setCustomHud(playerRef, xpHud);
-            }
-            if (config.get().isEnableStatLeveling()) {
-                player.getWorld().execute(() -> {
-                    levelService1.registerLevelUpListener(((playerId, newLevel) -> {
-                        if (playerId != playerRef.getUuid())
-                            return;
-                        StatsUtils.applyAllStats(player, playerRef, newLevel, config);
-                        world.execute(() -> {
-                            var transform = world_store.getStore()
-                                .getComponent(player.getReference(), EntityModule.get().getTransformComponentType());
-                            SoundUtil.playSoundEvent3dToPlayer(
-                                player.getReference(),
-                                levelup_sound,
-                                SoundCategory.UI,
-                                transform.getPosition(),
-                                world_store.getStore()
-                            );
-                        });
-                    }));
-                    levelService1.registerLevelDownListener(((playerId, newLevel) -> {
-                        StatsUtils.resetStats(player, playerRef);
-                        StatsUtils.applyAllStats(player, playerRef, newLevel, config);
-                        world.execute(() -> {
-                            var transform = world_store.getStore()
-                                .getComponent(player.getReference(), EntityModule.get().getTransformComponentType());
-                            SoundUtil.playSoundEvent3dToPlayer(
-                                player.getReference(),
-                                leveldown_sound,
-                                SoundCategory.UI,
-                                transform.getPosition(),
-                                world_store.getStore()
-                            );
-                        });
-                    }));
-                });
             }
         });
     }

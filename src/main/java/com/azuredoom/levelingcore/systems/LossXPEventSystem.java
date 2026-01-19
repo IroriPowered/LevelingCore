@@ -1,4 +1,4 @@
-package com.azuredoom.levelingcore.events;
+package com.azuredoom.levelingcore.systems;
 
 import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.component.Ref;

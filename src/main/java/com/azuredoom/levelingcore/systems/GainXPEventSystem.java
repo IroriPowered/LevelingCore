@@ -1,4 +1,4 @@
-package com.azuredoom.levelingcore.events;
+package com.azuredoom.levelingcore.systems;
 
 import com.hypixel.hytale.common.plugin.PluginIdentifier;
 import com.hypixel.hytale.component.CommandBuffer;
@@ -16,13 +16,17 @@ import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.Universe;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.hypixel.hytale.server.core.util.Config;
+import com.hypixel.hytale.server.npc.entities.NPCEntity;
 
+import java.util.logging.Level;
 import javax.annotation.Nonnull;
 
+import com.azuredoom.levelingcore.LevelingCore;
 import com.azuredoom.levelingcore.api.LevelingCoreApi;
 import com.azuredoom.levelingcore.compat.SimplePartyCompat;
 import com.azuredoom.levelingcore.config.GUIConfig;
 import com.azuredoom.levelingcore.lang.CommandLang;
+import com.azuredoom.levelingcore.level.xp.XPValues;
 import com.azuredoom.levelingcore.utils.NotificationsUtil;
 
 /**
@@ -80,12 +84,18 @@ public class GainXPEventSystem extends DeathSystems.OnDeathSystem {
                 var statMap = store.getComponent(ref, EntityStatMap.getComponentType());
                 if (statMap == null)
                     return;
+                var entity = store.getComponent(ref, NPCEntity.getComponentType());
+                if (entity == null)
+                    return;
+                var xpMap = XPValues.loadOrCreate(LevelingCore.configPath);
                 var healthIndex = EntityStatType.getAssetMap().getIndex("Health");
                 var healthStat = statMap.get(healthIndex);
                 if (healthStat == null)
                     return;
                 var maxHealth = healthStat.getMax();
-                var xpAmount = Math.max(1, (long) (maxHealth * this.config.get().getDefaultXPGainPercentage()));
+                var xpAmountHealth = Math.max(1, (long) (maxHealth * this.config.get().getDefaultXPGainPercentage()));
+                var getXPMapping = xpMap.getOrDefault(entity.getNPCTypeId(), Math.toIntExact(xpAmountHealth));
+                var xpAmount = config.get().isUseConfigXPMappingsInsteadOfHealthDefaults() ? getXPMapping : xpAmountHealth;
                 LevelingCoreApi.getLevelServiceIfPresent().ifPresent(levelService -> {
                     var levelBefore = levelService.getLevel(player.getUuid());
                     // Checks that the SimpleParty plugin is installed

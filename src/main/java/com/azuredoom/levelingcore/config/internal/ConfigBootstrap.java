@@ -1,11 +1,13 @@
 package com.azuredoom.levelingcore.config.internal;
 
 import java.nio.file.Path;
+import java.util.Map;
 
 import com.azuredoom.levelingcore.database.DataSourceFactory;
 import com.azuredoom.levelingcore.database.JdbcLevelRepository;
 import com.azuredoom.levelingcore.exceptions.LevelingCoreException;
 import com.azuredoom.levelingcore.level.LevelServiceImpl;
+import com.azuredoom.levelingcore.level.xp.XPValues;
 
 /**
  * ConfigBootstrap is a utility class that initializes and configures the core components of the LevelingCore system.
@@ -25,6 +27,7 @@ public final class ConfigBootstrap {
      */
     public record Bootstrap(
         LevelServiceImpl service,
+        Map<String, Integer> xpMapping,
         AutoCloseable closeable
     ) {}
 
@@ -55,7 +58,8 @@ public final class ConfigBootstrap {
             repo.migrateFormulaIfNeeded(formula, formulaDescriptor);
         }
         var service = new LevelServiceImpl(formula, repo);
+        var xpMapping = XPValues.loadOrCreate(dataDir);
 
-        return new Bootstrap(service, repo::close);
+        return new Bootstrap(service, xpMapping, repo::close);
     }
 }

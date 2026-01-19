@@ -13,11 +13,9 @@ import javax.annotation.Nonnull;
 import com.azuredoom.levelingcore.commands.*;
 import com.azuredoom.levelingcore.config.GUIConfig;
 import com.azuredoom.levelingcore.config.internal.ConfigBootstrap;
-import com.azuredoom.levelingcore.events.GainXPEventSystem;
-import com.azuredoom.levelingcore.events.LossXPEventSystem;
 import com.azuredoom.levelingcore.exceptions.LevelingCoreException;
-import com.azuredoom.levelingcore.hud.XPTickSystem;
 import com.azuredoom.levelingcore.level.LevelServiceImpl;
+import com.azuredoom.levelingcore.systems.*;
 
 public class LevelingCore extends JavaPlugin {
 
@@ -58,15 +56,8 @@ public class LevelingCore extends JavaPlugin {
         this.config.save();
         LOGGER.at(Level.INFO).log("Leveling Core initializing");
         levelingService = bootstrap.service();
-        getCommandRegistry().registerCommand(new AddLevelCommand(config));
-        getCommandRegistry().registerCommand(new CheckLevelCommand(config));
-        getCommandRegistry().registerCommand(new AddXpCommand(config));
-        getCommandRegistry().registerCommand(new SetLevelCommand(config));
-        getCommandRegistry().registerCommand(new RemoveLevelCommand(config));
-        getCommandRegistry().registerCommand(new RemoveXpCommand(config));
-        getEntityStoreRegistry().registerSystem(new XPTickSystem(config));
-        getEntityStoreRegistry().registerSystem(new GainXPEventSystem(config));
-        getEntityStoreRegistry().registerSystem(new LossXPEventSystem(config));
+        this.registerAllCommands();
+        this.registerAllSystems();
     }
 
     /**
@@ -106,5 +97,22 @@ public class LevelingCore extends JavaPlugin {
      */
     public static LevelingCore getInstance() {
         return INSTANCE;
+    }
+
+    public void registerAllCommands() {
+        getCommandRegistry().registerCommand(new AddLevelCommand(config));
+        getCommandRegistry().registerCommand(new CheckLevelCommand(config));
+        getCommandRegistry().registerCommand(new AddXpCommand(config));
+        getCommandRegistry().registerCommand(new SetLevelCommand(config));
+        getCommandRegistry().registerCommand(new RemoveLevelCommand(config));
+        getCommandRegistry().registerCommand(new RemoveXpCommand(config));
+    }
+
+    public void registerAllSystems() {
+        getEntityStoreRegistry().registerSystem(new XPTickSystem(config));
+        getEntityStoreRegistry().registerSystem(new LevelUpTickingSystem(config));
+        getEntityStoreRegistry().registerSystem(new LevelDownTickingSystem(config));
+        getEntityStoreRegistry().registerSystem(new GainXPEventSystem(config));
+        getEntityStoreRegistry().registerSystem(new LossXPEventSystem(config));
     }
 }
