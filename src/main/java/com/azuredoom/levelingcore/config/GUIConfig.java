@@ -161,11 +161,11 @@ public class GUIConfig {
 
     private boolean enableStatLeveling = true;
 
-    private float healthLevelUpMultiplier = 1.2F;
+    private float healthLevelUpMultiplier = 2.2F;
 
-    private float staminaLevelUpMultiplier = 0.35F;
+    private float staminaLevelUpMultiplier = 1.35F;
 
-    private float manaLevelUpMultiplier = 0.6F;
+    private float manaLevelUpMultiplier = 1.6F;
 
     private boolean enableStatHealing = true;
 
