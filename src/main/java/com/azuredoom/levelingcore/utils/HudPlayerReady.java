@@ -14,7 +14,6 @@ import com.azuredoom.levelingcore.api.LevelingCoreApi;
 import com.azuredoom.levelingcore.compat.MultipleHudCompat;
 import com.azuredoom.levelingcore.config.GUIConfig;
 import com.azuredoom.levelingcore.hud.XPBarHud;
-import com.azuredoom.levelingcore.level.LevelServiceImpl;
 
 public class HudPlayerReady {
 
