@@ -14,7 +14,7 @@ import com.azuredoom.levelingcore.level.LevelServiceImpl;
 
 public class XPBarHud extends CustomUIHud {
 
-    static private final WeakHashMap<PlayerRef, XPBarHud> hudMap = new WeakHashMap<>();
+    public static final WeakHashMap<PlayerRef, XPBarHud> hudMap = new WeakHashMap<>();
 
     private LevelServiceImpl levelServiceImpl;
 
@@ -68,5 +68,9 @@ public class XPBarHud extends CustomUIHud {
             return;
         var uiCommandBuilder = new UICommandBuilder();
         hud.update(uiCommandBuilder);
+    }
+
+    public static void removeHud(@NonNullDecl PlayerRef playerRef) {
+        hudMap.remove(playerRef);
     }
 }

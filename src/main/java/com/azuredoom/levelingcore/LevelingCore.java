@@ -1,6 +1,7 @@
 package com.azuredoom.levelingcore;
 
 import com.hypixel.hytale.logger.HytaleLogger;
+import com.hypixel.hytale.server.core.event.events.player.PlayerDisconnectEvent;
 import com.hypixel.hytale.server.core.event.events.player.PlayerReadyEvent;
 import com.hypixel.hytale.server.core.plugin.JavaPlugin;
 import com.hypixel.hytale.server.core.plugin.JavaPluginInit;
@@ -15,6 +16,7 @@ import com.azuredoom.levelingcore.commands.*;
 import com.azuredoom.levelingcore.config.GUIConfig;
 import com.azuredoom.levelingcore.config.internal.ConfigBootstrap;
 import com.azuredoom.levelingcore.exceptions.LevelingCoreException;
+import com.azuredoom.levelingcore.hud.XPBarHud;
 import com.azuredoom.levelingcore.level.LevelServiceImpl;
 import com.azuredoom.levelingcore.systems.*;
 import com.azuredoom.levelingcore.utils.HudPlayerReady;
@@ -65,6 +67,9 @@ public class LevelingCore extends JavaPlugin {
                 PlayerReadyEvent.class,
                 (playerReadyEvent -> HudPlayerReady.ready(playerReadyEvent, config))
             );
+        // Cleans up hudMap map
+        this.getEventRegistry()
+            .registerGlobal(PlayerDisconnectEvent.class, (event) -> XPBarHud.removeHud(event.getPlayerRef()));
     }
 
     /**
