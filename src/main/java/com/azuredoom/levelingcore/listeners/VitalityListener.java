@@ -1,4 +1,4 @@
-package com.azuredoom.levelingcore.events;
+package com.azuredoom.levelingcore.listeners;
 
 import java.util.UUID;
 

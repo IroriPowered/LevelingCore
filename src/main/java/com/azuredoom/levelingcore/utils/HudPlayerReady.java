@@ -13,7 +13,7 @@ import com.azuredoom.levelingcore.LevelingCore;
 import com.azuredoom.levelingcore.api.LevelingCoreApi;
 import com.azuredoom.levelingcore.compat.MultipleHudCompat;
 import com.azuredoom.levelingcore.config.GUIConfig;
-import com.azuredoom.levelingcore.hud.XPBarHud;
+import com.azuredoom.levelingcore.ui.hud.XPBarHud;
 
 public class HudPlayerReady {
 

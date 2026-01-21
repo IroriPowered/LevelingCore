@@ -1,4 +1,4 @@
-package com.azuredoom.levelingcore.hud;
+package com.azuredoom.levelingcore.ui.hud;
 
 import com.hypixel.hytale.common.plugin.PluginIdentifier;
 import com.hypixel.hytale.server.core.Message;

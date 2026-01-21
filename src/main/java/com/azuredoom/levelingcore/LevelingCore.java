@@ -17,7 +17,7 @@ import com.azuredoom.levelingcore.commands.*;
 import com.azuredoom.levelingcore.config.GUIConfig;
 import com.azuredoom.levelingcore.config.internal.ConfigBootstrap;
 import com.azuredoom.levelingcore.exceptions.LevelingCoreException;
-import com.azuredoom.levelingcore.hud.XPBarHud;
+import com.azuredoom.levelingcore.ui.hud.XPBarHud;
 import com.azuredoom.levelingcore.level.LevelServiceImpl;
 import com.azuredoom.levelingcore.systems.*;
 import com.azuredoom.levelingcore.utils.HudPlayerReady;

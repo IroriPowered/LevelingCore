@@ -17,7 +17,7 @@ import org.checkerframework.checker.nullness.compatqual.NullableDecl;
 
 import com.azuredoom.levelingcore.api.LevelingCoreApi;
 import com.azuredoom.levelingcore.config.GUIConfig;
-import com.azuredoom.levelingcore.hud.XPBarHud;
+import com.azuredoom.levelingcore.ui.hud.XPBarHud;
 
 public class UITickSystem extends EntityTickingSystem<EntityStore> {
 
