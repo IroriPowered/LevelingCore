@@ -29,6 +29,18 @@ public class LevelServiceImpl {
 
     private final List<XpLossListener> xpLossListeners = new ArrayList<>();
 
+    private final List<StrengthListener> strListeners = new ArrayList<>();
+
+    private final List<AgilityListener> agiListeners = new ArrayList<>();
+
+    private final List<PerceptionListener> perListeners = new ArrayList<>();
+
+    private final List<VitalityListener> vitListeners = new ArrayList<>();
+
+    private final List<IntelligenceListener> intListeners = new ArrayList<>();
+
+    private final List<AbilityPointsListener> abilityPointsListeners = new ArrayList<>();
+
     public LevelServiceImpl(LevelFormula formula, JdbcLevelRepository repository) {
         this.formula = formula;
         this.repository = repository;
@@ -88,9 +100,9 @@ public class LevelServiceImpl {
         var newLevel = getLevel(id);
 
         if (newLevel > oldLevel) {
-            levelUpListeners.forEach(l -> l.onLevelUp(id, newLevel));
+            levelUpListeners.forEach(l -> l.onLevelUp(id, oldLevel, newLevel));
         } else if (newLevel < oldLevel) {
-            levelDownListeners.forEach(l -> l.onLevelDown(id, newLevel));
+            levelDownListeners.forEach(l -> l.onLevelDown(id, oldLevel, newLevel));
         }
     }
 
@@ -112,7 +124,7 @@ public class LevelServiceImpl {
 
         var newLevel = getLevel(id);
         if (newLevel < oldLevel) {
-            levelDownListeners.forEach(l -> l.onLevelDown(id, newLevel));
+            levelDownListeners.forEach(l -> l.onLevelDown(id, oldLevel, newLevel));
         }
     }
 
@@ -136,9 +148,9 @@ public class LevelServiceImpl {
 
         var newLevel = getLevel(playerId);
         if (newLevel > oldLevel) {
-            levelUpListeners.forEach(l -> l.onLevelUp(playerId, newLevel));
+            levelUpListeners.forEach(l -> l.onLevelUp(playerId, oldLevel, newLevel));
         } else if (newLevel < oldLevel) {
-            levelDownListeners.forEach(l -> l.onLevelDown(playerId, newLevel));
+            levelDownListeners.forEach(l -> l.onLevelDown(playerId, oldLevel, newLevel));
         }
 
         return newLevel;
@@ -178,7 +190,7 @@ public class LevelServiceImpl {
 
         var newLevel = getLevel(id);
         if (newLevel > oldLevel) {
-            levelUpListeners.forEach(l -> l.onLevelUp(id, newLevel));
+            levelUpListeners.forEach(l -> l.onLevelUp(id, oldLevel, newLevel));
         }
     }
 
@@ -199,7 +211,7 @@ public class LevelServiceImpl {
 
         var newLevel = getLevel(id);
         if (newLevel < oldLevel) {
-            levelDownListeners.forEach(l -> l.onLevelDown(id, newLevel));
+            levelDownListeners.forEach(l -> l.onLevelDown(id, oldLevel, newLevel));
         }
     }
 
@@ -218,10 +230,138 @@ public class LevelServiceImpl {
 
         var newLevel = getLevel(id);
         if (newLevel > oldLevel) {
-            levelUpListeners.forEach(l -> l.onLevelUp(id, newLevel));
+            levelUpListeners.forEach(l -> l.onLevelUp(id, oldLevel, newLevel));
         } else if (newLevel < oldLevel) {
-            levelDownListeners.forEach(l -> l.onLevelDown(id, newLevel));
+            levelDownListeners.forEach(l -> l.onLevelDown(id, oldLevel, newLevel));
         }
+    }
+
+    public void setStr(UUID id, int str) {
+        var data = get(id);
+        data.setStr(str);
+        repository.save(data);
+
+        strListeners.forEach(l -> l.onStrengthGain(id, str));
+    }
+
+    public int getStr(UUID id) {
+        return get(id).getStr();
+    }
+
+    public void setAgi(UUID id, int agi) {
+        var data = get(id);
+        data.setAgi(agi);
+        repository.save(data);
+
+        agiListeners.forEach(l -> l.onAgilityGain(id, agi));
+    }
+
+    public int getAgi(UUID id) {
+        return get(id).getAgi();
+    }
+
+    public void setPer(UUID id, int per) {
+        var data = get(id);
+        data.setPer(per);
+        repository.save(data);
+
+        perListeners.forEach(l -> l.onPerceptionGain(id, per));
+    }
+
+    public int getPer(UUID id) {
+        return get(id).getPer();
+    }
+
+    public void setVit(UUID id, int vit) {
+        var data = get(id);
+        data.setVit(vit);
+        repository.save(data);
+
+        vitListeners.forEach(l -> l.onVitalityGain(id, vit));
+    }
+
+    public int getVit(UUID id) {
+        return get(id).getVit();
+    }
+
+    public void setInt(UUID id, int intelligence) {
+        var data = get(id);
+        data.setIntelligence(intelligence);
+        repository.save(data);
+
+        intListeners.forEach(l -> l.onIntelligenceGain(id, intelligence));
+    }
+
+    public int getInt(UUID id) {
+        return get(id).getIntelligence();
+    }
+
+    public void setAbilityPoints(UUID id, int abilityPoints) {
+        var data = get(id);
+        data.setAbilityPoints(abilityPoints);
+        repository.save(data);
+
+        abilityPointsListeners.forEach(l -> l.onAbilityPointGain(id, abilityPoints));
+    }
+
+    public int getAbilityPoints(UUID id) {
+        return get(id).getAbilityPoints();
+    }
+
+    public int getAvailableAbilityPoints(UUID id) {
+        var data = get(id);
+        return Math.max(0, data.getAbilityPoints() - data.getUsedAbilityPoints());
+    }
+
+    public int getUsedAbilityPoints(UUID id) {
+        return get(id).getUsedAbilityPoints();
+    }
+
+    public void addAbilityPoints(UUID id, int pointsToAdd) {
+        if (pointsToAdd <= 0)
+            return;
+
+        var data = get(id);
+        data.setAbilityPoints(data.getAbilityPoints() + pointsToAdd);
+        repository.save(data);
+
+        abilityPointsListeners.forEach(
+            l -> l.onAbilityPointGain(id, pointsToAdd)
+        );
+    }
+
+    public void setUsedAbilityPoints(UUID id, int points) {
+        var data = get(id);
+        data.setUsedAbilityPoints(points);
+        repository.save(data);
+
+        abilityPointsListeners.forEach(
+            l -> l.onAbilityPointLoss(id, points)
+        );
+    }
+
+    public boolean useAbilityPoints(UUID id, int amount) {
+        if (amount <= 0)
+            return false;
+
+        var data = get(id);
+
+        int total = data.getAbilityPoints();
+        int used = data.getUsedAbilityPoints();
+        int available = total - used;
+
+        if (amount > available) {
+            return false; // not enough points
+        }
+
+        data.setUsedAbilityPoints(used + amount);
+        repository.save(data);
+
+        abilityPointsListeners.forEach(
+            l -> l.onAbilityPointUsed(id, amount)
+        );
+
+        return true;
     }
 
     /**
@@ -303,6 +443,46 @@ public class LevelServiceImpl {
      */
     public List<XpLossListener> getXpLossListeners() {
         return xpLossListeners;
+    }
+
+    public void registerStrengthListener(StrengthListener listener) {
+        strListeners.add(listener);
+    }
+
+    public List<StrengthListener> getStrengthListeners() {
+        return strListeners;
+    }
+
+    public void registerAgilityListener(AgilityListener listener) {
+        agiListeners.add(listener);
+    }
+
+    public List<AgilityListener> getAgilityListeners() {
+        return agiListeners;
+    }
+
+    public void registerPerceptionListener(PerceptionListener listener) {
+        perListeners.add(listener);
+    }
+
+    public List<PerceptionListener> getPerceptionListeners() {
+        return perListeners;
+    }
+
+    public void registerVitalityListener(VitalityListener listener) {
+        vitListeners.add(listener);
+    }
+
+    public List<VitalityListener> getVitalityListeners() {
+        return vitListeners;
+    }
+
+    public void registerIntelligenceListener(IntelligenceListener listener) {
+        intListeners.add(listener);
+    }
+
+    public List<IntelligenceListener> getIntelligenceListeners() {
+        return intListeners;
     }
 
     /**

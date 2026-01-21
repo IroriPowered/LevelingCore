@@ -42,4 +42,16 @@ public class CommandLang {
 
     public static final Message SET_LEVEL_2 = Message.translation("commands.levelingcore.setlevel.2");
 
+    public static final Message ABILITY_POINTS = Message.translation("commands.levelingcore.abilitypoints");
+
+    public static final Message ABILITY_POINTS_AVAILABLE = Message.translation(
+        "commands.levelingcore.avaliavailablitypoints"
+    );
+
+    public static final Message UNKNOWN_STAT = Message.translation("commands.levelingcore.unknownstat");
+
+    public static final Message ERROR_UI = Message.translation("commands.levelingcore.errorui");
+
+    public static final Message STATS_DISABLED = Message.translation("commands.levelingcore.statsdisabled");
+
 }

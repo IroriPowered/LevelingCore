@@ -6,23 +6,16 @@ import com.hypixel.hytale.component.Holder;
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.component.query.Query;
 import com.hypixel.hytale.component.system.tick.EntityTickingSystem;
-import com.hypixel.hytale.protocol.SoundCategory;
-import com.hypixel.hytale.server.core.asset.type.soundevent.config.SoundEvent;
 import com.hypixel.hytale.server.core.entity.EntityUtils;
 import com.hypixel.hytale.server.core.entity.entities.Player;
-import com.hypixel.hytale.server.core.modules.entity.EntityModule;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
-import com.hypixel.hytale.server.core.universe.world.SoundUtil;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.hypixel.hytale.server.core.util.Config;
 import org.checkerframework.checker.nullness.compatqual.NonNullDecl;
 import org.checkerframework.checker.nullness.compatqual.NullableDecl;
 
-import com.azuredoom.levelingcore.api.LevelingCoreApi;
 import com.azuredoom.levelingcore.config.GUIConfig;
-import com.azuredoom.levelingcore.hud.XPBarHud;
-import com.azuredoom.levelingcore.utils.LevelUpRewardsUtil;
-import com.azuredoom.levelingcore.utils.StatsUtils;
+import com.azuredoom.levelingcore.utils.LevelDownListenerRegistrar;
 
 public class LevelDownTickingSystem extends EntityTickingSystem<EntityStore> {
 
@@ -46,33 +39,7 @@ public class LevelDownTickingSystem extends EntityTickingSystem<EntityStore> {
         if (player == null || playerRef == null) {
             return;
         }
-        var world = player.getWorld();
-        var world_store = world.getEntityStore();
-        var leveldown_sound = SoundEvent.getAssetMap().getIndex(config.get().getLevelDownSound());
-        LevelingCoreApi.getLevelServiceIfPresent().ifPresent(levelService1 -> {
-            if (config.get().isEnableStatLeveling()) {
-                store.getExternalData().getWorld().execute(() -> {
-                    levelService1.registerLevelDownListener(((playerId, newLevel) -> {
-                        StatsUtils.resetStats(player, playerRef);
-                        StatsUtils.applyAllStats(player, playerRef, newLevel, config);
-                        world.execute(() -> {
-                            var transform = world_store.getStore()
-                                .getComponent(player.getReference(), EntityModule.get().getTransformComponentType());
-                            SoundUtil.playSoundEvent3dToPlayer(
-                                player.getReference(),
-                                leveldown_sound,
-                                SoundCategory.UI,
-                                transform.getPosition(),
-                                world_store.getStore()
-                            );
-                        });
-                        // Need to clear out mapping whenever a player levels down as well
-                        LevelUpRewardsUtil.clear(player.getUuid());
-                        XPBarHud.updateHud(playerRef);
-                    }));
-                });
-            }
-        });
+        LevelDownListenerRegistrar.ensureRegistered(store, player, playerRef, config);
     }
 
     @NullableDecl

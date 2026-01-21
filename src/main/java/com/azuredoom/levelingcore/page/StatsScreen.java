@@ -1,0 +1,237 @@
+package com.azuredoom.levelingcore.page;
+
+import com.hypixel.hytale.codec.Codec;
+import com.hypixel.hytale.codec.KeyedCodec;
+import com.hypixel.hytale.codec.builder.BuilderCodec;
+import com.hypixel.hytale.component.Ref;
+import com.hypixel.hytale.component.Store;
+import com.hypixel.hytale.protocol.packets.interface_.CustomPageLifetime;
+import com.hypixel.hytale.protocol.packets.interface_.CustomUIEventBindingType;
+import com.hypixel.hytale.server.core.Message;
+import com.hypixel.hytale.server.core.entity.entities.player.pages.InteractiveCustomUIPage;
+import com.hypixel.hytale.server.core.modules.entitystats.EntityStatMap;
+import com.hypixel.hytale.server.core.modules.entitystats.asset.DefaultEntityStatTypes;
+import com.hypixel.hytale.server.core.modules.entitystats.modifier.Modifier;
+import com.hypixel.hytale.server.core.modules.entitystats.modifier.StaticModifier;
+import com.hypixel.hytale.server.core.ui.builder.EventData;
+import com.hypixel.hytale.server.core.ui.builder.UICommandBuilder;
+import com.hypixel.hytale.server.core.ui.builder.UIEventBuilder;
+import com.hypixel.hytale.server.core.universe.PlayerRef;
+import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
+
+import javax.annotation.Nonnull;
+
+import com.azuredoom.levelingcore.api.LevelingCoreApi;
+import com.azuredoom.levelingcore.lang.CommandLang;
+
+public class StatsScreen extends InteractiveCustomUIPage<StatsScreen.BindingData> {
+
+    public StatsScreen(@Nonnull PlayerRef playerRef, @Nonnull CustomPageLifetime lifetime) {
+        super(playerRef, lifetime, BindingData.CODEC);
+    }
+
+    @Override
+    public void build(
+        @Nonnull Ref<EntityStore> ref,
+        @Nonnull UICommandBuilder uiCommandBuilder,
+        @Nonnull UIEventBuilder uiEventBuilder,
+        @Nonnull Store<EntityStore> store
+    ) {
+        uiCommandBuilder.append("Page/LevelingCore/statspage.ui");
+        this.update(uiCommandBuilder);
+        uiEventBuilder.addEventBinding(
+            CustomUIEventBindingType.Activating,
+            "#AddStr",
+            new EventData().append("Type", "SpendStat").append("Stat", "str")
+        );
+        uiEventBuilder.addEventBinding(
+            CustomUIEventBindingType.Activating,
+            "#AddAgi",
+            new EventData().append("Type", "SpendStat").append("Stat", "agi")
+        );
+        uiEventBuilder.addEventBinding(
+            CustomUIEventBindingType.Activating,
+            "#AddPer",
+            new EventData().append("Type", "SpendStat").append("Stat", "per")
+        );
+        uiEventBuilder.addEventBinding(
+            CustomUIEventBindingType.Activating,
+            "#AddVit",
+            new EventData().append("Type", "SpendStat").append("Stat", "vit")
+        );
+        uiEventBuilder.addEventBinding(
+            CustomUIEventBindingType.Activating,
+            "#AddInt",
+            new EventData().append("Type", "SpendStat").append("Stat", "int")
+        );
+    }
+
+    public void update(UICommandBuilder uiCommandBuilder) {
+        var levelServiceOpt = LevelingCoreApi.getLevelServiceIfPresent();
+        if (levelServiceOpt.isEmpty()) {
+            uiCommandBuilder.set("#PNTSLabel.TextSpans", Message.raw("Service unavailable"));
+            return;
+        }
+        var levelServiceImpl = levelServiceOpt.get();
+        var hasAbilityPoints = levelServiceImpl.getAvailableAbilityPoints(playerRef.getUuid()) > 0;
+
+        uiCommandBuilder.set("#AddStr" + ".HitTestVisible", hasAbilityPoints);
+        uiCommandBuilder.set("#AddAgi" + ".HitTestVisible", hasAbilityPoints);
+        uiCommandBuilder.set("#AddPer" + ".HitTestVisible", hasAbilityPoints);
+        uiCommandBuilder.set("#AddVit" + ".HitTestVisible", hasAbilityPoints);
+        uiCommandBuilder.set("#AddInt" + ".HitTestVisible", hasAbilityPoints);
+        uiCommandBuilder.set(
+            "#STR.TextSpans",
+            Message.raw("STR: " + levelServiceImpl.getStr(playerRef.getUuid()))
+        );
+        uiCommandBuilder.set(
+            "#AGI.TextSpans",
+            Message.raw("AGI: " + levelServiceImpl.getAgi(playerRef.getUuid()))
+        );
+        uiCommandBuilder.set(
+            "#PER.TextSpans",
+            Message.raw("PER: " + levelServiceImpl.getPer(playerRef.getUuid()))
+        );
+        uiCommandBuilder.set(
+            "#VIT.TextSpans",
+            Message.raw("VIT: " + levelServiceImpl.getVit(playerRef.getUuid()))
+        );
+        uiCommandBuilder.set(
+            "#INT.TextSpans",
+            Message.raw("INT: " + levelServiceImpl.getInt(playerRef.getUuid()))
+        );
+        uiCommandBuilder.set(
+            "#PNTSLabel.TextSpans",
+            CommandLang.ABILITY_POINTS_AVAILABLE.param(
+                "ability_points",
+                levelServiceImpl.getAvailableAbilityPoints(playerRef.getUuid())
+            )
+        );
+    }
+
+    @Override
+    public void handleDataEvent(
+        @Nonnull Ref<EntityStore> ref,
+        @Nonnull Store<EntityStore> store,
+        @Nonnull BindingData data
+    ) {
+        try {
+            super.handleDataEvent(ref, store, data);
+            handleStatsApplied(ref, store, data);
+        } catch (Throwable t) {
+            playerRef.sendMessage(
+                CommandLang.ERROR_UI.param("class_name", t.getClass().getSimpleName()).param("msg", t.getMessage())
+            );
+        } finally {
+            this.refreshUI();
+        }
+    }
+
+    private void handleStatsApplied(
+        @Nonnull Ref<EntityStore> ref,
+        @Nonnull Store<EntityStore> store,
+        @Nonnull BindingData data
+    ) {
+        if (data == null || data.Type == null) {
+            return;
+        }
+
+        if (!"SpendStat".equalsIgnoreCase(data.Type)) {
+            return;
+        }
+
+        var levelService = LevelingCoreApi.getLevelServiceIfPresent().orElse(null);
+        if (levelService == null) {
+            playerRef.sendMessage(CommandLang.NOT_INITIALIZED);
+            return;
+        }
+
+        var uuid = playerRef.getUuid();
+
+        if (levelService.getAvailableAbilityPoints(uuid) <= 0) {
+            this.refreshUI();
+            return;
+        }
+
+        if (!levelService.useAbilityPoints(uuid, 1)) {
+            this.refreshUI();
+            return;
+        }
+
+        String stat = (data.Stat == null) ? "" : data.Stat.toLowerCase();
+        switch (stat) {
+            case "str" -> levelService.setStr(uuid, levelService.getStr(uuid) + 1);
+            case "agi" -> levelService.setAgi(uuid, levelService.getAgi(uuid) + 1);
+            case "per" -> levelService.setPer(uuid, levelService.getPer(uuid) + 1);
+            case "vit" -> levelService.setVit(uuid, levelService.getVit(uuid) + 1);
+            case "int" -> levelService.setInt(uuid, levelService.getInt(uuid) + 1);
+            default -> {
+                playerRef.sendMessage(CommandLang.UNKNOWN_STAT.param("stat", data.Stat));
+                this.refreshUI();
+                return;
+            }
+        }
+
+        var playerStatMap = store.ensureAndGetComponent(ref, EntityStatMap.getComponentType());
+
+        var healthIndex = DefaultEntityStatTypes.getHealth();
+        var staminaIndex = DefaultEntityStatTypes.getStamina();
+        var manaIndex = DefaultEntityStatTypes.getMana();
+
+        var healthModifier = new StaticModifier(
+            Modifier.ModifierTarget.MAX,
+            StaticModifier.CalculationType.ADDITIVE,
+            levelService.getVit(uuid) * 2.0F
+        );
+        var staminaModifier = new StaticModifier(
+            Modifier.ModifierTarget.MAX,
+            StaticModifier.CalculationType.ADDITIVE,
+            levelService.getAgi(uuid) * 2.0F
+        );
+        var manaModifier = new StaticModifier(
+            Modifier.ModifierTarget.MAX,
+            StaticModifier.CalculationType.ADDITIVE,
+            levelService.getInt(uuid) * 2.0F
+        );
+
+        var healthModifierKey = "LevelingCore_health_stat";
+        var staminaModifierKey = "LevelingCore_stamina_stat";
+        var manaModifierKey = "LevelingCore_mana_stat";
+
+        playerStatMap.putModifier(healthIndex, healthModifierKey, healthModifier);
+        playerStatMap.putModifier(staminaIndex, staminaModifierKey, staminaModifier);
+        playerStatMap.putModifier(manaIndex, manaModifierKey, manaModifier);
+
+        this.refreshUI();
+    }
+
+    private void refreshUI() {
+        var builder = new UICommandBuilder();
+        this.update(builder);
+        this.sendUpdate(builder);
+    }
+
+    public static class BindingData {
+
+        public String Type;
+
+        public String Stat;
+
+        public static final BuilderCodec<BindingData> CODEC =
+            BuilderCodec.builder(BindingData.class, BindingData::new)
+                .append(
+                    new KeyedCodec<>("Type", Codec.STRING),
+                    (d, v) -> d.Type = v,
+                    d -> d.Type
+                )
+                .add()
+                .append(
+                    new KeyedCodec<>("Stat", Codec.STRING),
+                    (d, v) -> d.Stat = v,
+                    d -> d.Stat
+                )
+                .add()
+                .build();
+    }
+
+}

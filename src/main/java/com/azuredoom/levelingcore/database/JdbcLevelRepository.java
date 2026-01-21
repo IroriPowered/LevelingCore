@@ -61,6 +61,16 @@ public class JdbcLevelRepository {
             Statement stmt = connection.createStatement()
         ) {
             stmt.execute(sql);
+
+            stmt.execute("ALTER TABLE player_levels ADD COLUMN IF NOT EXISTS str INT DEFAULT 0 NOT NULL");
+            stmt.execute("ALTER TABLE player_levels ADD COLUMN IF NOT EXISTS agi INT DEFAULT 0 NOT NULL");
+            stmt.execute("ALTER TABLE player_levels ADD COLUMN IF NOT EXISTS per INT DEFAULT 0 NOT NULL");
+            stmt.execute("ALTER TABLE player_levels ADD COLUMN IF NOT EXISTS vit INT DEFAULT 0 NOT NULL");
+            stmt.execute("ALTER TABLE player_levels ADD COLUMN IF NOT EXISTS int INT DEFAULT 0 NOT NULL");
+            stmt.execute("ALTER TABLE player_levels ADD COLUMN IF NOT EXISTS ability_points INT DEFAULT 5 NOT NULL");
+            stmt.execute(
+                "ALTER TABLE player_levels ADD COLUMN IF NOT EXISTS used_ability_points INT DEFAULT 0 NOT NULL"
+            );
         } catch (Exception e) {
             throw new LevelingCoreException("Failed to create player_levels table", e);
         }
@@ -305,14 +315,29 @@ public class JdbcLevelRepository {
      * @throws LevelingCoreException if any database operation fails, such as connection issues or invalid SQL.
      */
     public void save(PlayerLevelData data) {
-        var updateSql = "UPDATE player_levels SET xp = ? WHERE player_id = ?";
-        var insertSql = "INSERT INTO player_levels (player_id, xp) VALUES (?, ?)";
+        var updateSql = """
+                UPDATE player_levels
+                SET xp = ?, str = ?, agi = ?, per = ?, vit = ?, int = ?, ability_points = ?, used_ability_points = ?
+                WHERE player_id = ?
+            """;
+        var insertSql = """
+                INSERT INTO player_levels
+                (player_id, xp, str, agi, per, vit, int, ability_points, used_ability_points)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+            """;
 
         try (Connection connection = dataSource.getConnection()) {
             int updated;
             try (PreparedStatement ps = connection.prepareStatement(updateSql)) {
                 ps.setLong(1, data.getXp());
-                ps.setString(2, data.getPlayerId().toString());
+                ps.setInt(2, data.getStr());
+                ps.setInt(3, data.getAgi());
+                ps.setInt(4, data.getPer());
+                ps.setInt(5, data.getVit());
+                ps.setInt(6, data.getIntelligence());
+                ps.setInt(7, data.getAbilityPoints());
+                ps.setInt(8, data.getUsedAbilityPoints());
+                ps.setString(9, data.getPlayerId().toString());
                 updated = ps.executeUpdate();
             }
 
@@ -320,6 +345,13 @@ public class JdbcLevelRepository {
                 try (PreparedStatement ps = connection.prepareStatement(insertSql)) {
                     ps.setString(1, data.getPlayerId().toString());
                     ps.setLong(2, data.getXp());
+                    ps.setInt(3, data.getStr());
+                    ps.setInt(4, data.getAgi());
+                    ps.setInt(5, data.getPer());
+                    ps.setInt(6, data.getVit());
+                    ps.setInt(7, data.getIntelligence());
+                    ps.setInt(8, data.getAbilityPoints());
+                    ps.setInt(9, data.getUsedAbilityPoints());
                     ps.executeUpdate();
                 }
             }
@@ -340,7 +372,11 @@ public class JdbcLevelRepository {
      * @throws LevelingCoreException if any database operation fails, such as connection issues or invalid SQL.
      */
     public PlayerLevelData load(UUID id) {
-        var sql = "SELECT xp FROM player_levels WHERE player_id = ?";
+        var sql = """
+                SELECT xp, str, agi, per, vit, int, ability_points, used_ability_points
+                FROM player_levels
+                WHERE player_id = ?
+            """;
 
         try (
             Connection connection = dataSource.getConnection();
@@ -353,6 +389,13 @@ public class JdbcLevelRepository {
             if (rs.next()) {
                 var data = new PlayerLevelData(id);
                 data.setXp(rs.getLong("xp"));
+                data.setStr(rs.getInt("str"));
+                data.setAgi(rs.getInt("agi"));
+                data.setPer(rs.getInt("per"));
+                data.setVit(rs.getInt("vit"));
+                data.setIntelligence(rs.getInt("int"));
+                data.setAbilityPoints(rs.getInt("ability_points"));
+                data.setUsedAbilityPoints(rs.getInt("used_ability_points"));
                 return data;
             }
             return null;

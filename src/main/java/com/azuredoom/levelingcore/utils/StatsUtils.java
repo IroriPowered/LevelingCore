@@ -1,13 +1,15 @@
 package com.azuredoom.levelingcore.utils;
 
+import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.modules.entitystats.EntityStatMap;
 import com.hypixel.hytale.server.core.modules.entitystats.asset.DefaultEntityStatTypes;
 import com.hypixel.hytale.server.core.modules.entitystats.modifier.Modifier;
 import com.hypixel.hytale.server.core.modules.entitystats.modifier.StaticModifier;
-import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.World;
+import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.hypixel.hytale.server.core.util.Config;
+import org.checkerframework.checker.nullness.compatqual.NonNullDecl;
 import org.checkerframework.checker.nullness.compatqual.NullableDecl;
 
 import com.azuredoom.levelingcore.config.GUIConfig;
@@ -26,14 +28,15 @@ public class StatsUtils {
         return player.getWorld();
     }
 
-    private static @NullableDecl EntityStatMap getStatMap(Player player, PlayerRef playerRef) {
-        return player.getReference()
-            .getStore()
-            .getComponent(player.getReference(), EntityStatMap.getComponentType());
+    private static @NullableDecl EntityStatMap getStatMap(@NonNullDecl Store<EntityStore> store, Player player) {
+        if (store == null || player == null || player.getReference() == null) {
+            return null;
+        }
+        return store.getComponent(player.getReference(), EntityStatMap.getComponentType());
     }
 
-    public static void doHealthIncrease(Player player, PlayerRef playerRef, float healthMultiplier) {
-        var playerStatMap = StatsUtils.getStatMap(player, playerRef);
+    public static void doHealthIncrease(Store<EntityStore> store, Player player, float healthMultiplier) {
+        var playerStatMap = StatsUtils.getStatMap(store, player);
         if (playerStatMap == null)
             return;
         var healthIndex = DefaultEntityStatTypes.getHealth();
@@ -46,8 +49,8 @@ public class StatsUtils {
         playerStatMap.putModifier(healthIndex, modifierKey, modifier);
     }
 
-    public static void doStaminaIncrease(Player player, PlayerRef playerRef, float staminaMultiplier) {
-        var playerStatMap = StatsUtils.getStatMap(player, playerRef);
+    public static void doStaminaIncrease(Store<EntityStore> store, Player player, float staminaMultiplier) {
+        var playerStatMap = StatsUtils.getStatMap(store, player);
         if (playerStatMap == null)
             return;
         var staminaIndex = DefaultEntityStatTypes.getStamina();
@@ -60,8 +63,8 @@ public class StatsUtils {
         playerStatMap.putModifier(staminaIndex, modifierKey, modifier);
     }
 
-    public static void doManaIncrease(Player player, PlayerRef playerRef, float manaMultiplier) {
-        var playerStatMap = StatsUtils.getStatMap(player, playerRef);
+    public static void doManaIncrease(Store<EntityStore> store, Player player, float manaMultiplier) {
+        var playerStatMap = StatsUtils.getStatMap(store, player);
         if (playerStatMap == null)
             return;
         var manaIndex = DefaultEntityStatTypes.getMana();
@@ -74,8 +77,8 @@ public class StatsUtils {
         playerStatMap.putModifier(manaIndex, modifierKey, modifier);
     }
 
-    public static void resetStats(Player player, PlayerRef playerRef) {
-        var playerStatMap = StatsUtils.getStatMap(player, playerRef);
+    public static void resetStats(Store<EntityStore> store, Player player) {
+        var playerStatMap = StatsUtils.getStatMap(store, player);
         if (playerStatMap == null)
             return;
 
@@ -83,34 +86,40 @@ public class StatsUtils {
         var staminaIndex = DefaultEntityStatTypes.getStamina();
         var manaIndex = DefaultEntityStatTypes.getMana();
 
+        playerStatMap.removeModifier(healthIndex, "LevelingCore_health_stat");
+        playerStatMap.removeModifier(staminaIndex, "LevelingCore_stamina_stat");
+        playerStatMap.removeModifier(manaIndex, "LevelingCore_mana_stat");
+        playerStatMap.removeModifier(healthIndex, "LevelingCore_health");
+        playerStatMap.removeModifier(staminaIndex, "LevelingCore_stamina");
+        playerStatMap.removeModifier(manaIndex, "LevelingCore_mana");
         playerStatMap.resetStatValue(healthIndex);
         playerStatMap.resetStatValue(staminaIndex);
         playerStatMap.resetStatValue(manaIndex);
     }
 
     public static void applyAllStats(
+        Store<EntityStore> store,
         Player player,
-        PlayerRef playerRef,
         int newLevel,
         Config<GUIConfig> config
     ) {
         StatsUtils.doHealthIncrease(
+            store,
             player,
-            playerRef,
             newLevel * config.get().getHealthLevelUpMultiplier()
         );
         StatsUtils.doStaminaIncrease(
+            store,
             player,
-            playerRef,
             newLevel * config.get().getStaminaLevelUpMultiplier()
         );
-        StatsUtils.doManaIncrease(player, playerRef, newLevel * config.get().getManaLevelUpMultiplier());
+        StatsUtils.doManaIncrease(store, player, newLevel * config.get().getManaLevelUpMultiplier());
         if (config.get().isEnableStatHealing())
-            healMaxStat(player, playerRef, config);
+            healMaxStat(store, player);
     }
 
-    private static void healMaxStat(Player player, PlayerRef playerRef, Config<GUIConfig> config) {
-        var playerStatMap = StatsUtils.getStatMap(player, playerRef);
+    private static void healMaxStat(Store<EntityStore> store, Player player) {
+        var playerStatMap = StatsUtils.getStatMap(store, player);
         if (playerStatMap == null)
             return;
         playerStatMap.maximizeStatValue(EntityStatMap.Predictable.SELF, DefaultEntityStatTypes.getHealth());

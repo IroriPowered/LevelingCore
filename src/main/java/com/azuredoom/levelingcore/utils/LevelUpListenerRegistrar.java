@@ -18,6 +18,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import com.azuredoom.levelingcore.api.LevelingCoreApi;
 import com.azuredoom.levelingcore.config.GUIConfig;
 import com.azuredoom.levelingcore.hud.XPBarHud;
+import com.azuredoom.levelingcore.lang.CommandLang;
 
 public final class LevelUpListenerRegistrar {
 
@@ -44,13 +45,15 @@ public final class LevelUpListenerRegistrar {
 
             store.getExternalData()
                 .getWorld()
-                .execute(() -> levelService.registerLevelUpListener((playerId, newLevel) -> {
+                .execute(() -> levelService.registerLevelUpListener((playerId, oldLevel, newLevel) -> {
                     if (!playerId.equals(id))
                         return;
 
-                    StatsUtils.applyAllStats(player, playerRef, newLevel, config);
+                    StatsUtils.applyAllStats(store, player, newLevel, config);
 
                     world.execute(() -> {
+                        if (player.getReference() == null)
+                            return;
                         var transform = worldStore.getStore()
                             .getComponent(player.getReference(), EntityModule.get().getTransformComponentType());
                         SoundUtil.playSoundEvent3dToPlayer(
@@ -61,8 +64,23 @@ public final class LevelUpListenerRegistrar {
                             worldStore.getStore()
                         );
                     });
-                    if (config.get().isEnableLevelUpRewardsConfig())
-                        LevelUpRewardsUtil.giveRewards(newLevel, player);
+                    if (config.get().isEnableLevelUpRewardsConfig()) {
+                        for (int lvl = oldLevel + 1; lvl <= newLevel; lvl++) {
+                            LevelUpRewardsUtil.giveRewards(lvl, player);
+                        }
+                    }
+                    if (!config.get().isDisableStatPointGainOnLevelUp()) {
+                        var pointsPerLevel = config.get().getStatsPerLevel();
+                        var totalFromLeveling = Math.max(5, newLevel * pointsPerLevel);
+
+                        levelService.setAbilityPoints(playerId, totalFromLeveling);
+
+                        playerRef.sendMessage(
+                            CommandLang.ABILITY_POINTS.param("ability_points", totalFromLeveling)
+                                .param("player_name", playerRef.getUsername())
+                        );
+                    }
+                    LevelDownListenerRegistrar.clear(playerId);
                     XPBarHud.updateHud(playerRef);
                 }));
         });

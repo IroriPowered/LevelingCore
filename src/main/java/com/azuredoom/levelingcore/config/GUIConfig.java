@@ -145,6 +145,18 @@ public class GUIConfig {
             (exConfig, extraInfo) -> exConfig.enableLevelUpRewardsConfig
         )
         .add()
+        .append(
+            new KeyedCodec<Boolean>("DisableStatPointGainOnLevelUp", Codec.BOOLEAN),
+            (exConfig, aDouble, extraInfo) -> exConfig.disableStatPointGainOnLevelUp = aDouble,
+            (exConfig, extraInfo) -> exConfig.disableStatPointGainOnLevelUp
+        )
+        .add()
+        .append(
+            new KeyedCodec<Integer>("StatsPerLevel", Codec.INTEGER),
+            (exConfig, aDouble, extraInfo) -> exConfig.statsPerLevel = aDouble,
+            (exConfig, extraInfo) -> exConfig.statsPerLevel
+        )
+        .add()
         .build();
 
     private boolean enableXPLossOnDeath = false;
@@ -190,6 +202,10 @@ public class GUIConfig {
     private boolean useConfigXPMappingsInsteadOfHealthDefaults = true;
 
     private boolean enableLevelUpRewardsConfig = false;
+
+    private boolean disableStatPointGainOnLevelUp = false;
+
+    private int statsPerLevel = 5;
 
     public GUIConfig() {}
 
@@ -364,5 +380,13 @@ public class GUIConfig {
 
     public boolean isEnableLevelUpRewardsConfig() {
         return enableLevelUpRewardsConfig;
+    }
+
+    public boolean isDisableStatPointGainOnLevelUp() {
+        return disableStatPointGainOnLevelUp;
+    }
+
+    public int getStatsPerLevel() {
+        return statsPerLevel;
     }
 }

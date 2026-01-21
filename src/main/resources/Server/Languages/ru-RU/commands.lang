@@ -5,6 +5,11 @@ levelingcore.lostxp = Вы умерли и потеряли {xp} ед. опыт�
 levelingcore.leveldown = Понижение уровня! Теперь у вас уровень {level}
 levelingcore.deathalllevels = Вы умерли и потеряли все уровни!
 levelingcore.minleveldeath = У вас уже минимальное количество опыта для уровня {level}
+levelingcore.abilitypoints = Теперь у вас {ability_points} очков характеристик. Используйте /showstats {player_name}, чтобы распределить их.
+levelingcore.avaliavailablitypoints = Доступные\nочки\nхарактеристик:\n{ability_points}
+levelingcore.unknownstat = Неизвестная характеристика: {stat}
+levelingcore.errorui = Ошибка при обработке события интерфейса: {class_name}: {msg}
+levelingcore.statsdisabled = Характеристики отключены на этом сервере.
 
 levelingcore.addlevel.1 = Игроку {player} добавлен {level} уровень
 levelingcore.addlevel.2 = Игроку {player} добавлено {level} уровней

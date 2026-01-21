@@ -5,6 +5,11 @@ levelingcore.lostxp = ¡Moriste y perdiste {xp} XP!
 levelingcore.leveldown = ¡Nivel bajado! Ahora eres nivel {level}
 levelingcore.deathalllevels = ¡Moriste y perdiste todos los niveles!
 levelingcore.minleveldeath = ¡Ya estás en la XP mínima para el nivel {level}!
+levelingcore.abilitypoints = Ahora tienes {ability_points} puntos de estadísticas. Usa /showstats {player_name} para asignarlos.
+levelingcore.avaliavailablitypoints = Puntos\nde\nEstadísticas\ndisponibles:\n{ability_points}
+levelingcore.unknownstat = Estadística desconocida: {stat}
+levelingcore.errorui = Error al manejar el evento de la interfaz: {class_name}: {msg}
+levelingcore.statsdisabled = Las estadísticas están desactivadas en este servidor.
 
 levelingcore.addlevel.1 = Se agregó {level} nivel a {player}
 levelingcore.addlevel.2 = Se agregaron {level} niveles a {player}

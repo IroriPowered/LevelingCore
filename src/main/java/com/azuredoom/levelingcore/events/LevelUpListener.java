@@ -8,5 +8,5 @@ import java.util.UUID;
  */
 public interface LevelUpListener {
 
-    void onLevelUp(UUID playerId, int newLevel);
+    void onLevelUp(UUID playerId, int oldLevel, int newLevel);
 }

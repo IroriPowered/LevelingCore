@@ -13,6 +13,20 @@ public class PlayerLevelData {
 
     private long xp;
 
+    private int str;
+
+    private int agi;
+
+    private int per;
+
+    private int vit;
+
+    private int intelligence;
+
+    private int abilityPoints;
+
+    private int usedAbilityPoints;
+
     public PlayerLevelData(UUID playerId) {
         this.playerId = playerId;
         this.xp = 0;
@@ -46,4 +60,61 @@ public class PlayerLevelData {
     public void setXp(long xp) {
         this.xp = Math.max(0, xp);
     }
+
+    public int getStr() {
+        return str;
+    }
+
+    public void setStr(int str) {
+        this.str = str;
+    }
+
+    public int getAgi() {
+        return agi;
+    }
+
+    public void setAgi(int agi) {
+        this.agi = agi;
+    }
+
+    public int getPer() {
+        return per;
+    }
+
+    public void setPer(int per) {
+        this.per = per;
+    }
+
+    public int getVit() {
+        return vit;
+    }
+
+    public void setVit(int vit) {
+        this.vit = vit;
+    }
+
+    public int getIntelligence() {
+        return intelligence;
+    }
+
+    public void setIntelligence(int intelligence) {
+        this.intelligence = intelligence;
+    }
+
+    public int getAbilityPoints() {
+        return abilityPoints;
+    }
+
+    public void setAbilityPoints(int abilityPoints) {
+        this.abilityPoints = abilityPoints;
+    }
+
+    public int getUsedAbilityPoints() {
+        return usedAbilityPoints;
+    }
+
+    public void setUsedAbilityPoints(int usedAbilityPoints) {
+        this.usedAbilityPoints = usedAbilityPoints;
+    }
+
 }
