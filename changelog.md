@@ -1,3 +1,20 @@
+v0.8.0
+- Implemented mob leveling.
+- Added a config option to set the mob LevelMode.
+  - LevelModes:
+    - NEARBY_PLAYERS_MEAN: Default leveling, mobs level up based on the average level of nearby players.
+    - BIOME: Biome leveling, mobs level up based on the biome they spawn in.
+      - Is controlled by the config: mods/levelingcore_LevelingCore/data/config/mobbiomemapping.csv
+    - INSTANCE: Instance leveling, mobs level up based on the instance they spawn in.
+      - Is controlled by the config: mods/levelingcore_LevelingCore/data/config/mobinstancemapping.csv
+    - ZONE: Zone leveling, mobs level up based on the zone they spawn in.
+      - Is controlled by the config: mods/levelingcore_LevelingCore/data/config/mobzonemapping.csv
+    - SPAWN_ONLY: Mobs get their based on their spawn level.
+- Added a config option to set the mob leveling health multiplier.
+- Added a config option to set the mob leveling damage multiplier.
+- Added a config option to set the mob leveling range damage multiplier.
+- Increases XP gained on mobs with five levels or fewer of the attacker.
+
 v0.7.2
 - Removed UITickSystem, no longer needed and should resolve some lag on level up/downs.
 - Adjusted default xp config values for bears.
