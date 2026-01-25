@@ -106,9 +106,6 @@ public class MobLevelSystem extends EntityTickingSystem<EntityStore> {
     @NullableDecl
     @Override
     public Query<EntityStore> getQuery() {
-        return Query.and(
-            NPCEntity.getComponentType(),
-            TransformComponent.getComponentType()
-        );
+        return Query.any();
     }
 }
