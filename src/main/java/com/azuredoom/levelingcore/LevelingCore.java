@@ -3,6 +3,7 @@ package com.azuredoom.levelingcore;
 import com.hypixel.hytale.logger.HytaleLogger;
 import com.hypixel.hytale.server.core.event.events.player.PlayerDisconnectEvent;
 import com.hypixel.hytale.server.core.event.events.player.PlayerReadyEvent;
+import com.hypixel.hytale.server.core.modules.interaction.interaction.config.Interaction;
 import com.hypixel.hytale.server.core.plugin.JavaPlugin;
 import com.hypixel.hytale.server.core.plugin.JavaPluginInit;
 import com.hypixel.hytale.server.core.util.Config;
@@ -19,6 +20,7 @@ import com.azuredoom.levelingcore.commands.*;
 import com.azuredoom.levelingcore.config.GUIConfig;
 import com.azuredoom.levelingcore.config.internal.ConfigBootstrap;
 import com.azuredoom.levelingcore.exceptions.LevelingCoreException;
+import com.azuredoom.levelingcore.interaction.SkillPointResetInteraction;
 import com.azuredoom.levelingcore.level.LevelServiceImpl;
 import com.azuredoom.levelingcore.level.itemlevellock.ItemToLevelMapping;
 import com.azuredoom.levelingcore.level.mobs.MobLevelPersistence;
@@ -105,6 +107,8 @@ public class LevelingCore extends JavaPlugin {
         levelingService = bootstrap.service();
         this.registerAllCommands();
         this.registerAllSystems();
+        this.getCodecRegistry(Interaction.CODEC)
+            .register("SkillPointResetInteraction", SkillPointResetInteraction.class, SkillPointResetInteraction.CODEC);
         // Adds the UI to the player and ensures AP stats are applied
         this.getEventRegistry()
             .registerGlobal(
