@@ -12,8 +12,6 @@ import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.modules.entity.damage.Damage;
 import com.hypixel.hytale.server.core.modules.entity.damage.DamageModule;
 import com.hypixel.hytale.server.core.modules.entity.damage.DamageSystems;
-import com.hypixel.hytale.server.core.modules.entitystats.EntityStatMap;
-import com.hypixel.hytale.server.core.modules.entitystats.asset.DefaultEntityStatTypes;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.hypixel.hytale.server.core.util.Config;
@@ -97,9 +95,6 @@ public class LevelingCoreCombatSystem extends EntityEventSystem<EntityStore, Dam
                     return;
                 }
             }
-            var entityStatMapComponent = archetypeChunk.getComponent(index, EntityStatMap.getComponentType());
-            var healthStat = DefaultEntityStatTypes.getHealth();
-            var healthValue = entityStatMapComponent.get(healthStat);
             var world = store.getExternalData().getWorld();
             world.execute(() -> {
                 if (isProjectile) {
