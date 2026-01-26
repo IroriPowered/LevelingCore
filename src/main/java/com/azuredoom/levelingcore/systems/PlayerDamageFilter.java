@@ -1,7 +1,5 @@
 package com.azuredoom.levelingcore.systems;
 
-import com.azuredoom.levelingcore.LevelingCore;
-import com.azuredoom.levelingcore.utils.MobLevelingUtil;
 import com.hypixel.hytale.component.ArchetypeChunk;
 import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.component.Store;
@@ -21,8 +19,10 @@ import com.hypixel.hytale.server.npc.entities.NPCEntity;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import com.azuredoom.levelingcore.LevelingCore;
 import com.azuredoom.levelingcore.api.LevelingCoreApi;
 import com.azuredoom.levelingcore.config.GUIConfig;
+import com.azuredoom.levelingcore.utils.MobLevelingUtil;
 
 public class PlayerDamageFilter extends DamageEventSystem {
 
@@ -76,8 +76,8 @@ public class PlayerDamageFilter extends DamageEventSystem {
         var isProjectile = causeIdLower.contains("projectile") || causeIdLower.contains("arrow");
 
         var mobLevelData = LevelingCore.mobLevelRegistry.getOrCreate(
-                npcAttacker.getUuid(),
-                () -> MobLevelingUtil.computeSpawnLevel(npcAttacker)
+            npcAttacker.getUuid(),
+            () -> MobLevelingUtil.computeSpawnLevel(npcAttacker)
         );
         var mobLevel = mobLevelData.level;
         var meleeMulti = config.get().getMobDamageMultiplier();

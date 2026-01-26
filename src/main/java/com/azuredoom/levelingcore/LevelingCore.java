@@ -33,7 +33,6 @@ import com.azuredoom.levelingcore.level.rewards.RewardEntry;
 import com.azuredoom.levelingcore.level.stats.StatsPerLevelMapping;
 import com.azuredoom.levelingcore.level.xp.XPValues;
 import com.azuredoom.levelingcore.systems.*;
-import com.azuredoom.levelingcore.systems.LevelingCoreCombatSystem;
 import com.azuredoom.levelingcore.ui.hud.XPBarHud;
 import com.azuredoom.levelingcore.utils.HudPlayerReady;
 import com.azuredoom.levelingcore.utils.LevelDownListenerRegistrar;
@@ -206,6 +205,5 @@ public class LevelingCore extends JavaPlugin {
         getEntityStoreRegistry().registerSystem(new LevelDownTickingSystem(config));
         getEntityStoreRegistry().registerSystem(new GainXPEventSystem(config));
         getEntityStoreRegistry().registerSystem(new LossXPEventSystem(config));
-        getEntityStoreRegistry().registerSystem(new LevelingCoreCombatSystem(config));
     }
 }

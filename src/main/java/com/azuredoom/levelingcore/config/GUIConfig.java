@@ -235,6 +235,12 @@ public class GUIConfig {
             (exConfig, extraInfo) -> exConfig.mobRangeDamageMultiplier
         )
         .add()
+        .append(
+            new KeyedCodec<Boolean>("EnableItemLevelRestriction", Codec.BOOLEAN),
+            (exConfig, aBoolean, extraInfo) -> exConfig.enableItemLevelRestriction = aBoolean,
+            (exConfig, extraInfo) -> exConfig.enableItemLevelRestriction
+        )
+        .add()
         .build();
 
     private boolean enableXPLossOnDeath = false;
@@ -310,6 +316,8 @@ public class GUIConfig {
     private float mobDamageMultiplier = 0.25F;
 
     private float mobRangeDamageMultiplier = 0.3F;
+
+    private boolean enableItemLevelRestriction = false;
 
     public GUIConfig() {}
 
@@ -544,5 +552,9 @@ public class GUIConfig {
 
     public float getMobRangeDamageMultiplier() {
         return mobRangeDamageMultiplier;
+    }
+
+    public boolean isEnableItemLevelRestriction() {
+        return enableItemLevelRestriction;
     }
 }
