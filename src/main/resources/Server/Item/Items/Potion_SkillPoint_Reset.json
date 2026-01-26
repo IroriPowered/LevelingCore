@@ -126,7 +126,7 @@
   "Texture": "Items/Consumables/Potions/Potion_Textures/Purple.png",
   "Consumable": true,
   "Utility": {
-    "Compatible": false,
+    "Compatible": true,
     "Usable": false
   },
   "Interactions": {
