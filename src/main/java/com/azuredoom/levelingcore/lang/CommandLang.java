@@ -58,4 +58,32 @@ public class CommandLang {
 
     public static final Message MISSING_MULTIPLE_HUD = Message.translation("server.levelingcore.missingmultiplehud");
 
+    public static final Message SHOW_LEVEL = Message.translation("server.levelingcore.showlevel");
+
+    public static final Message XP_NEEDED = Message.translation("server.levelingcore.xpneeded");
+
+    public static final Message STR = Message.translation("server.levelingcore.str");
+
+    public static final Message STR_DESC = Message.translation("server.levelingcore.str.desc");
+
+    public static final Message AGI = Message.translation("server.levelingcore.agi");
+
+    public static final Message AGI_DESC = Message.translation("server.levelingcore.agi.desc");
+
+    public static final Message PER = Message.translation("server.levelingcore.per");
+
+    public static final Message PER_DESC = Message.translation("server.levelingcore.per.desc");
+
+    public static final Message VIT = Message.translation("server.levelingcore.vit");
+
+    public static final Message VIT_DESC = Message.translation("server.levelingcore.vit.desc");
+
+    public static final Message INT = Message.translation("server.levelingcore.int");
+
+    public static final Message INT_DESC = Message.translation("server.levelingcore.int.desc");
+
+    public static final Message CON = Message.translation("server.levelingcore.con");
+
+    public static final Message CON_DESC = Message.translation("server.levelingcore.con.desc");
+
 }

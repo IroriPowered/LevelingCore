@@ -90,11 +90,11 @@ public class StatsScreen extends InteractiveCustomUIPage<StatsScreen.BindingData
 
         uiCommandBuilder.set(
             "#Level.TextSpans",
-            Message.raw(playerRef.getUsername() + " - Level " + levelServiceImpl.getLevel(playerRef.getUuid()))
+            CommandLang.SHOW_LEVEL.param("playername", playerRef.getUsername()).param("level", currentLevel)
         );
         uiCommandBuilder.set(
             "#XP.TextSpans",
-            Message.raw("XP Required For Next Level: " + currentXp + " / " + xpForNextLevel)
+            CommandLang.XP_NEEDED.param("currentXp", currentXp).param("xpForNextLevel", xpForNextLevel)
         );
         uiCommandBuilder.set("#AddStr" + ".HitTestVisible", hasAbilityPoints);
         uiCommandBuilder.set("#AddAgi" + ".HitTestVisible", hasAbilityPoints);
@@ -104,51 +104,51 @@ public class StatsScreen extends InteractiveCustomUIPage<StatsScreen.BindingData
         uiCommandBuilder.set("#AddCon" + ".HitTestVisible", hasAbilityPoints);
         uiCommandBuilder.set(
             "#STR.TextSpans",
-            Message.raw("STR: " + levelServiceImpl.getStr(playerRef.getUuid()))
+            CommandLang.STR.param("points", levelServiceImpl.getStr(playerRef.getUuid()))
         );
         uiCommandBuilder.set(
             "#STRDescription.TextSpans",
-            Message.raw("Increases melee damage")
+            CommandLang.STR_DESC
         );
         uiCommandBuilder.set(
             "#AGI.TextSpans",
-            Message.raw("AGI: " + levelServiceImpl.getAgi(playerRef.getUuid()))
+            CommandLang.AGI.param("points", levelServiceImpl.getStr(playerRef.getUuid()))
         );
         uiCommandBuilder.set(
             "#AGIDescription.TextSpans",
-            Message.raw("Increases stamina and oxygen")
+            CommandLang.AGI_DESC
         );
         uiCommandBuilder.set(
             "#PER.TextSpans",
-            Message.raw("PER: " + levelServiceImpl.getPer(playerRef.getUuid()))
+            CommandLang.PER.param("points", levelServiceImpl.getStr(playerRef.getUuid()))
         );
         uiCommandBuilder.set(
             "#PERDescription.TextSpans",
-            Message.raw("Increases projectile damage")
+            CommandLang.PER_DESC
         );
         uiCommandBuilder.set(
             "#VIT.TextSpans",
-            Message.raw("VIT: " + levelServiceImpl.getVit(playerRef.getUuid()))
+            CommandLang.VIT.param("points", levelServiceImpl.getStr(playerRef.getUuid()))
         );
         uiCommandBuilder.set(
             "#VITDescription.TextSpans",
-            Message.raw("Increases melee damage")
+            CommandLang.VIT_DESC
         );
         uiCommandBuilder.set(
             "#INT.TextSpans",
-            Message.raw("INT: " + levelServiceImpl.getInt(playerRef.getUuid()))
+            CommandLang.INT.param("points", levelServiceImpl.getStr(playerRef.getUuid()))
         );
         uiCommandBuilder.set(
             "#INTDescription.TextSpans",
-            Message.raw("Increases maximum health")
+            CommandLang.INT_DESC
         );
         uiCommandBuilder.set(
             "#CON.TextSpans",
-            Message.raw("CON: " + levelServiceImpl.getCon(playerRef.getUuid()))
+            CommandLang.CON.param("points", levelServiceImpl.getStr(playerRef.getUuid()))
         );
         uiCommandBuilder.set(
             "#CONDescription.TextSpans",
-            Message.raw("Reduces incoming damage")
+            CommandLang.CON_DESC
         );
         uiCommandBuilder.set(
             "#PNTSLabel.TextSpans",
