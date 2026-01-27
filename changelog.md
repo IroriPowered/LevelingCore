@@ -1,3 +1,9 @@
+v0.8.3
+- Rewrote the stats screen to better show what each stat does.
+- Improved the mob leveling system to queue updates and process them in batches to reduce lag spikes.
+- All messages are now translatable.
+- Made /showstats command work without the player name argument.
+
 v0.8.2
 - Fixed log spamming on projectiles hitting mobs.
 - Party Pro UI now shows the players level next to Player name.
