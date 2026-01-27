@@ -9,13 +9,13 @@ public final class MobLevelRegistry {
     private final ConcurrentHashMap<UUID, MobLevelData> levels = new ConcurrentHashMap<>();
 
     public MobLevelData getOrCreate(UUID entityId, IntSupplier initialLevelSupplier, long nowTick) {
-        return levels.computeIfAbsent(entityId, id -> new MobLevelData(initialLevelSupplier.getAsInt(), nowTick));
+        return levels.computeIfAbsent(entityId, id -> new MobLevelData(initialLevelSupplier.getAsInt()));
     }
 
     public MobLevelData getOrCreate(UUID entityId, IntSupplier initialLevelSupplier) {
         return levels.computeIfAbsent(
             entityId,
-            id -> new MobLevelData(initialLevelSupplier.getAsInt(), System.currentTimeMillis())
+            id -> new MobLevelData(initialLevelSupplier.getAsInt())
         );
     }
 
@@ -29,14 +29,14 @@ public final class MobLevelRegistry {
             var persistedOpt = persistence.get(id);
             if (persistedOpt.isPresent()) {
                 var persisted = persistedOpt.get();
-                var data = new MobLevelData(persisted.spawnLevel(), nowTick);
+                var data = new MobLevelData(persisted.spawnLevel());
                 data.locked = persisted.locked();
                 return data;
             }
             var spawnLevel = spawnLevelSupplier.getAsInt();
             persistence.put(id, new PersistedMobLevel(spawnLevel, false));
 
-            return new MobLevelData(spawnLevel, nowTick);
+            return new MobLevelData(spawnLevel);
         });
     }
 

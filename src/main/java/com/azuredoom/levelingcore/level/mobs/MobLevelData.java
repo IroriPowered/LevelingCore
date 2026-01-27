@@ -4,16 +4,16 @@ public final class MobLevelData {
 
     public int level;
 
-    public long lastRecalcTick;
-
     public boolean locked;
 
     public int lastAppliedLevel;
 
-    public MobLevelData(int level, long lastRecalcTick) {
+    public volatile long lastRecalcMs;
+
+    public MobLevelData(int level) {
         this.level = level;
-        this.lastRecalcTick = lastRecalcTick;
         this.locked = false;
         this.lastAppliedLevel = level;
+        this.lastRecalcMs = 0;
     }
 }

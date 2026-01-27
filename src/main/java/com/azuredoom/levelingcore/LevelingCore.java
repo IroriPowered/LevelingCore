@@ -19,6 +19,8 @@ import com.azuredoom.levelingcore.api.LevelingCoreApi;
 import com.azuredoom.levelingcore.commands.*;
 import com.azuredoom.levelingcore.config.GUIConfig;
 import com.azuredoom.levelingcore.config.internal.ConfigBootstrap;
+import com.azuredoom.levelingcore.config.internal.ConfigManager;
+import com.azuredoom.levelingcore.config.internal.LevelingCoreConfig;
 import com.azuredoom.levelingcore.exceptions.LevelingCoreException;
 import com.azuredoom.levelingcore.interaction.SkillPointResetInteraction;
 import com.azuredoom.levelingcore.level.LevelServiceImpl;
@@ -54,6 +56,8 @@ public class LevelingCore extends JavaPlugin {
     private static LevelingCore INSTANCE;
 
     private final Config<GUIConfig> config;
+
+    public static final LevelingCoreConfig levelingCoreConfig = ConfigManager.loadOrCreate(LevelingCore.configPath);
 
     public static final Map<String, Integer> xpMapping = XPValues.loadOrCreate(LevelingCore.configPath);
 

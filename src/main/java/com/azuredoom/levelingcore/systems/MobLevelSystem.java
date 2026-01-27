@@ -14,19 +14,23 @@ import org.checkerframework.checker.nullness.compatqual.NonNullDecl;
 import org.checkerframework.checker.nullness.compatqual.NullableDecl;
 
 import java.util.Locale;
+import java.util.concurrent.atomic.AtomicLong;
 
 import com.azuredoom.levelingcore.LevelingCore;
 import com.azuredoom.levelingcore.config.GUIConfig;
-import com.azuredoom.levelingcore.config.internal.ConfigManager;
 import com.azuredoom.levelingcore.level.formulas.loader.LevelTableLoader;
 import com.azuredoom.levelingcore.utils.MobLevelingUtil;
 
 @SuppressWarnings("removal")
 public class MobLevelSystem extends EntityTickingSystem<EntityStore> {
 
-    private long tickCounter = 0;
+    private final AtomicLong nextSaveAtMs = new AtomicLong(0);
 
-    private Config<GUIConfig> config;
+    private static final long SAVE_INTERVAL_MS = 30_000;
+
+    private static final long RECALC_INTERVAL_MS = 2_000;
+
+    private final Config<GUIConfig> config;
 
     public MobLevelSystem(Config<GUIConfig> config) {
         this.config = config;
@@ -40,61 +44,65 @@ public class MobLevelSystem extends EntityTickingSystem<EntityStore> {
         @NonNullDecl Store<EntityStore> store,
         @NonNullDecl CommandBuffer<EntityStore> commandBuffer
     ) {
-        if (index == 0)
-            tickCounter++;
-        var nowTick = tickCounter;
+        if (index == 0) {
+            var nowMs = System.currentTimeMillis();
+            var scheduled = nextSaveAtMs.get();
+            if (nowMs >= scheduled && nextSaveAtMs.compareAndSet(scheduled, nowMs + 30_000)) {
+                store.getExternalData().getWorld().execute(LevelingCore.mobLevelPersistence::save);
+            }
+        }
+
         final var holder = EntityUtils.toHolder(index, archetypeChunk);
         final var npc = holder.getComponent(NPCEntity.getComponentType());
         if (npc == null)
             return;
+
         final var transform = holder.getComponent(TransformComponent.getComponentType());
         if (transform == null)
             return;
+
         final var entityId = npc.getUuid();
+        final var nowMs = System.currentTimeMillis();
+
         var data = LevelingCore.mobLevelRegistry.getOrCreateWithPersistence(
             entityId,
             () -> MobLevelingUtil.computeSpawnLevel(npc),
-            nowTick,
+            nowMs,
             LevelingCore.mobLevelPersistence
         );
         if (data.locked)
             return;
-        var recalcEveryTicks = 40;
-        if (nowTick - data.lastRecalcTick < recalcEveryTicks)
+        var last = data.lastRecalcMs;
+        if (nowMs - last < RECALC_INTERVAL_MS)
             return;
 
-        if (index == 0) {
-            tickCounter++;
+        data.lastRecalcMs = nowMs;
 
-            if (tickCounter % 200 == 0) {
-                var world = store.getExternalData().getWorld();
-                world.execute(LevelingCore.mobLevelPersistence::save);
-            }
-        }
         store.getExternalData().getWorld().execute(() -> {
             int mobMaxLevel;
-            var interalConfig = ConfigManager.loadOrCreate(LevelingCore.configPath);
-            var type = interalConfig.formula.type.trim().toUpperCase(Locale.ROOT);
-            if (type.equals("LINEAR")) {
-                mobMaxLevel = interalConfig.formula.linear.maxLevel;
-            } else if (type.equals("TABLE")) {
-                var tableFormula = LevelTableLoader.loadOrCreateFromDataDir(
-                    interalConfig.formula.table.file
-                );
-                mobMaxLevel = Math.max(1, tableFormula.getMaxLevel());
-            } else if (type.equals("CUSTOM")) {
-                mobMaxLevel = interalConfig.formula.custom.maxLevel;
-            } else {
-                mobMaxLevel = interalConfig.formula.exponential.maxLevel;
+            var internalConfig = LevelingCore.levelingCoreConfig;
+            var type = internalConfig.formula.type.trim().toUpperCase(Locale.ROOT);
+
+            switch (type) {
+                case "LINEAR" -> mobMaxLevel = internalConfig.formula.linear.maxLevel;
+                case "TABLE" -> {
+                    var tableFormula = LevelTableLoader.loadOrCreateFromDataDir(
+                        internalConfig.formula.table.file
+                    );
+                    mobMaxLevel = Math.max(1, tableFormula.getMaxLevel());
+                }
+                case "CUSTOM" -> mobMaxLevel = internalConfig.formula.custom.maxLevel;
+                default -> mobMaxLevel = internalConfig.formula.exponential.maxLevel;
             }
+
             var newLevel = Math.max(
                 1,
                 Math.min(mobMaxLevel, MobLevelingUtil.computeDynamicLevel(config, npc, transform, store))
             );
 
-            if (newLevel != data.level)
+            if (newLevel != data.level) {
                 data.level = newLevel;
-            data.lastRecalcTick = nowTick;
+            }
 
             if (data.level != data.lastAppliedLevel) {
                 MobLevelingUtil.applyMobScaling(config, npc, data.level, store);
