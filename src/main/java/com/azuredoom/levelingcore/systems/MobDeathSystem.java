@@ -38,7 +38,8 @@ public class MobDeathSystem extends DamageEventSystem {
         @Nonnull CommandBuffer<EntityStore> commandBuffer,
         @Nonnull Damage damage
     ) {
-        if (!config.get().isEnableDeathRemovalNoAnimations()) return;
+        if (!config.get().isEnableDeathRemovalNoAnimations())
+            return;
         var entityStatMap = archetypeChunk.getComponent(index, EntityStatMap.getComponentType());
         var healthStat = DefaultEntityStatTypes.getHealth();
         var healthValue = entityStatMap.get(healthStat);
