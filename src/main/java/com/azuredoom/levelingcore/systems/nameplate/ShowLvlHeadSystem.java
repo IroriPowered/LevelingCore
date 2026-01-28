@@ -82,7 +82,7 @@ public class ShowLvlHeadSystem implements Runnable {
                     if (lvl == null)
                         continue;
 
-                    var text = formatNameplate(npc.getRoleName(), lvl.level);
+                    var text = formatNameplate("", lvl.level);
                     upsertNameplate(commandBuffer, ref, text);
                 }
             });

@@ -160,11 +160,9 @@ public class LevelingCore extends JavaPlugin {
             });
 
         this.showLvlHeadSystem = new ShowLvlHeadSystem(config);
-        this.getTaskRegistry()
-            .registerTask(
-                (ScheduledFuture<Void>) HytaleServer.SCHEDULED_EXECUTOR
-                    .scheduleAtFixedRate(this.showLvlHeadSystem, 0L, 250L, TimeUnit.MILLISECONDS)
-            );
+        ScheduledFuture<Void> showLvlTask = (ScheduledFuture<Void>) HytaleServer.SCHEDULED_EXECUTOR
+            .scheduleAtFixedRate(this.showLvlHeadSystem, 0L, 250L, TimeUnit.MILLISECONDS);
+        this.getTaskRegistry().registerTask(showLvlTask);
         LevelingCore.mobLevelPersistence.load();
     }
 
