@@ -3,6 +3,8 @@ package com.azuredoom.levelingcore.systems.nameplate;
 import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.server.core.entity.nameplate.Nameplate;
+import com.hypixel.hytale.server.core.modules.entitystats.EntityStatMap;
+import com.hypixel.hytale.server.core.modules.entitystats.asset.DefaultEntityStatTypes;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.Universe;
 import com.hypixel.hytale.server.core.universe.world.World;
@@ -72,6 +74,7 @@ public class ShowLvlHeadSystem implements Runnable {
                     var npc = commandBuffer.getComponent(ref, NPCEntity.getComponentType());
                     if (npc == null)
                         continue;
+
                     final var entityId = npc.getUuid();
                     var lvl = LevelingCore.mobLevelRegistry.getOrCreateWithPersistence(
                         entityId,
@@ -98,9 +101,16 @@ public class ShowLvlHeadSystem implements Runnable {
             commandBuffer.removeComponent(ref, Nameplate.getComponentType());
             return;
         }
+        var entityStatMap = commandBuffer.getComponent(ref, EntityStatMap.getComponentType());
+        var healthStat = DefaultEntityStatTypes.getHealth();
+        var healthValue = entityStatMap.get(healthStat);
 
         var current = commandBuffer.getComponent(ref, Nameplate.getComponentType());
         if (current != null) {
+            if (healthValue.get() <= 0) {
+                commandBuffer.removeComponent(ref, Nameplate.getComponentType());
+                return;
+            }
             var old = current.getText();
             if (desiredText.equals(old)) {
                 return;
@@ -110,7 +120,8 @@ public class ShowLvlHeadSystem implements Runnable {
             return;
         }
 
-        commandBuffer.putComponent(ref, Nameplate.getComponentType(), new Nameplate(desiredText));
+        if (healthValue.get() > 0)
+            commandBuffer.putComponent(ref, Nameplate.getComponentType(), new Nameplate(desiredText));
     }
 
     private String formatNameplate(String name, int level) {
