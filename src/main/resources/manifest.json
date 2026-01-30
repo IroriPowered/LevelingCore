@@ -22,5 +22,8 @@
     },
     "DisabledByDefault": false,
     "Main": "com.azuredoom.levelingcore.LevelingCore",
-    "IncludesAssetPack": true
+    "IncludesAssetPack": true,
+    "UpdateChecker": {
+        "CurseForge": "1414678"
+    }
 }
