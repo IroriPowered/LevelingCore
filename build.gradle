@@ -120,6 +120,17 @@ publishing {
                 basic(BasicAuthentication)
             }
         }
+        maven {
+            name = "hmod"
+            url = project.hmod_maven_url
+            credentials {
+                username = project.findProperty("moddingMavenUsername")
+                password = project.findProperty("moddingMavenPassword")
+            }
+            authentication {
+                basic(BasicAuthentication)
+            }
+        }
     }
     publications {
         maven(MavenPublication) {
