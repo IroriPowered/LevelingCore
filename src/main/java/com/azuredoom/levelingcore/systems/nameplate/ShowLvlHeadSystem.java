@@ -19,6 +19,7 @@ import com.azuredoom.levelingcore.api.LevelingCoreApi;
 import com.azuredoom.levelingcore.config.GUIConfig;
 import com.azuredoom.levelingcore.utils.MobLevelingUtil;
 
+@SuppressWarnings("removal")
 public class ShowLvlHeadSystem implements Runnable {
 
     private final Config<GUIConfig> config;
