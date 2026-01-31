@@ -2,19 +2,18 @@
     "Group": "com.azuredoom",
     "Name": "levelingcore",
     "Version": "0.9.1",
-    "Description": " A modern, flexible leveling system for Hytale!",
+    "Description": "A modern, flexible leveling system for Hytale",
     "Authors": [
         {
-            "Name": "Azuredoom"
+            "Name": "AzureDoom"
         }
     ],
-    "Website": "https://azuredoom.com/",
+    "Website": "https://modtale.net/mod/levelingcore",
     "ServerVersion": "*",
     "Dependencies": {
         "Hytale:EntityModule": "*",
         "Hytale:InteractionModule": "*",
-        "Hytale:DamageModule": "*",
-        "Buuz135:MultipleHUD": "*"
+        "Hytale:DamageModule": "*"
     },
     "OptionalDependencies": {
         "com.carsonk:Party Plugin": "*",

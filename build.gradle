@@ -40,8 +40,6 @@ repositories {
 }
 
 dependencies {
-    // Hytale server
-    //compileOnly("com.hypixel.hytale:2026.01.24-6e2d4fc36")
     vineflowerTool("org.vineflower:vineflower:1.11.2")
     compileOnly("com.buuz135:MultipleHUD:1.0.3")
     runtimeOnly("com.buuz135:MultipleHUD:1.0.3")
@@ -69,11 +67,48 @@ if (!serverRunDir.exists()) {
 }
 
 tasks.register('updatePluginManifest') {
+    group = "hytale"
     def manifestFile = file('src/main/resources/manifest.json')
     doLast {
         def manifestJson = new groovy.json.JsonSlurper().parseText(manifestFile.text)
-        manifestJson.Version = version
-        manifestJson.IncludesAssetPack = includes_pack.toBoolean()
+        def propStr = { String key, Object fallback = null ->
+            project.hasProperty(key) && project.property(key) != null
+                    ? project.property(key).toString()
+                    : fallback
+        }
+        def ensureMap = { Object parent, String key ->
+            if (!(parent[key] instanceof Map)) parent[key] = [:]
+            parent[key] as Map
+        }
+
+        def parseDepMap = { String raw ->
+            def out = [:]
+            if (!raw) return out
+            raw.split(/\s*,\s*/).findAll { it?.trim() }.each { entry ->
+                def parts = entry.split(/\s*=\s*/, 2)
+                if (parts.length == 2) out[parts[0].trim()] = parts[1].trim()
+            }
+            out
+        }
+
+        def parseAuthors = { String raw ->
+            if (!raw) return null
+            raw.split(/\s*,\s*/).findAll { it?.trim() }.collect { n -> [Name: n.trim()] }
+        }
+        manifestJson.Group = project.manifest_group
+        manifestJson.Name = project.mod_id
+        manifestJson.Version = project.version
+        manifestJson.Description = project.mod_description
+        manifestJson.Authors = parseAuthors(propStr('mod_credits', null))
+        manifestJson.Website = project.mod_url
+        manifestJson.ServerVersion = "*"
+        manifestJson.Dependencies = parseDepMap(propStr('manifest_dependencies', null))
+        manifestJson.OptionalDependencies = parseDepMap(propStr('manifest_opt_dependencies', null))
+        manifestJson.DisabledByDefault = project.disabled_by_default.toBoolean()
+        manifestJson.Main = project.main_class
+        manifestJson.IncludesAssetPack = project.includes_pack.toBoolean()
+        manifestJson.UpdateChecker = project.main_class
+        ensureMap(manifestJson, 'UpdateChecker').CurseForge = propStr('curseforgeID', null)
         manifestFile.text = groovy.json.JsonOutput.prettyPrint(groovy.json.JsonOutput.toJson(manifestJson))
     }
 }
@@ -249,7 +284,6 @@ if (keyPropsFile.exists()) {
             def releaseProp = new Properties()
             releaseProp.load(new FileInputStream(keyPropsFile))
             def apiKey = releaseProp.getProperty("curseKey")
-            def projectId = releaseProp.getProperty("curseProjectId")
 
             def jarFile = layout.buildDirectory
                     .file("libs/${project.name}-${project.version}.jar")
@@ -263,7 +297,6 @@ if (keyPropsFile.exists()) {
             ]
 
             def optionalDeps = [
-                    "simpleparty",
                     "partypro",
                     "party-info",
                     "better-modlist"
@@ -292,7 +325,7 @@ if (keyPropsFile.exists()) {
                     curlExe,
                     "-f", "-sS",
                     "-X", "POST",
-                    "https://legacy.curseforge.com/api/projects/${projectId}/upload-file",
+                    "https://legacy.curseforge.com/api/projects/${project.curseforgeID}/upload-file",
                     "-H", "X-Api-Token: ${apiKey}",
                     "-F", "metadata=${metadataJson};type=application/json",
                     "-F", "file=@${jarFile.absolutePath}"
