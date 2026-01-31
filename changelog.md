@@ -1,3 +1,27 @@
+v0.9.2
+
+***WARNING: THIS VERSION CHANGES THE CONFIG LOCATION PLEASE BACK UP YOUR OLD CONFIG BEFORE UPDATING***
+
+- Fixed available ability points in the level-up message being the total number of points a player has not the number of points they can use.
+- Added support for the Update Checker mod.
+- Removed Simply Party XP Share compatibility, mod is no longer updated, it seems, and is not allowing mod distribution via CF.
+- Fixed missing interaction JSON for SkillPointResetInteraction.
+- Fixed an incorrect link in the manifest for the plugin along with a few other small changes there.
+- Made MultipleHUD dependency optional, but with annoying messages if it is not installed.
+- Fixed /showstats command not working for non-op players.
+- Removed unused config options.
+- Fixed nameplates not removing levels whenever the config is changed to disable levels on mobs or players.
+- Fixed xp gain from running if xp is 0 or less.
+- Added new config options for PartyPro and Party plugin compatibility.
+  - Added a config option to split XP between party members with a configurable percentage.
+  - Added a config option to if the player member who gained XP should be given the full instead of the split XP.
+  - Added a config option to enable a configurable distance check to prevent XP gain from party members that are too far away.
+- **Moved all data to com.azuredoom_levelingcore folder in the mods folder.**
+  - **Old data will be need to be manually migrated. Sorry!**
+- Fixed some more errors related to wrong threads.
+- Added a config option for mob level multiplier.
+  - Controls how strongly a mob’s level scales the amount of XP it rewards.
+
 v0.9.1
 - Removed the playername from the /showstats command completely. 
 - Mob leveling is no longer applied to mobs with health <= 0, fully fixes death animation bug.
