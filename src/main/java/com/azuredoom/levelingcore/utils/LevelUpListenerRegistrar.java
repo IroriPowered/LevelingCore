@@ -22,6 +22,7 @@ import com.azuredoom.levelingcore.config.GUIConfig;
 import com.azuredoom.levelingcore.lang.CommandLang;
 import com.azuredoom.levelingcore.ui.hud.XPBarHud;
 
+@SuppressWarnings("removal")
 public final class LevelUpListenerRegistrar {
 
     private static final Set<UUID> REGISTERED =
@@ -84,7 +85,7 @@ public final class LevelUpListenerRegistrar {
                         } else {
                             pointsPerLevel = config.get().getStatsPerLevel();
                         }
-                        var totalFromLeveling = Math.max(5, newLevel * pointsPerLevel);
+                        var totalFromLeveling = Math.max(0, newLevel * pointsPerLevel);
 
                         levelService.setAbilityPoints(playerId, totalFromLeveling);
 
