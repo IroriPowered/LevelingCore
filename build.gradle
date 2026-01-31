@@ -47,9 +47,10 @@ dependencies {
     compileOnly("com.buuz135:MultipleHUD:1.0.3")
     runtimeOnly("com.buuz135:MultipleHUD:1.0.3")
     compileOnly 'curse.maven:partyinfo-1429469:7526614'
-    // TODO: Move to compileOnly 'curse.maven:partypro-1438292:7529599'
-    compileOnly fileTree(dir: "$rootDir/libs", include: ["partypro-*"])
-    runtimeOnly fileTree(dir: "$rootDir/libs", include: ["partypro-*"])
+    compileOnly 'curse.maven:partypro-1438292:7529599'
+    runtimeOnly 'curse.maven:partypro-1438292:7529599'
+    //compileOnly fileTree(dir: "$rootDir/libs", include: ["*.jar"])
+    //runtimeOnly fileTree(dir: "$rootDir/libs", include: ["*.jar"])
     // Needed libs
     shadowBundle 'com.h2database:h2:2.4.240'
     shadowBundle('com.zaxxer:HikariCP:7.0.2') {
