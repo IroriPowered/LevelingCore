@@ -39,6 +39,7 @@ public class HudPlayerReady {
                 LevelingCore.LOGGER.at(Level.WARNING).log(CommandLang.MISSING_MULTIPLE_HUD.getRawText());
                 player.getHudManager().setCustomHud(playerRef, xpHud);
             }
+            XPBarHud.updateHud(playerRef);
         }));
     }
 }
