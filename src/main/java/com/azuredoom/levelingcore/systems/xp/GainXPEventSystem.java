@@ -107,13 +107,14 @@ public class GainXPEventSystem extends DeathSystems.OnDeathSystem {
                 );
                 if (mobLevel == null)
                     return;
-                var xpAmountHealth = Math.max(1, (long) (maxHealth * this.config.get().getDefaultXPGainPercentage()));
+                var hpScale = Math.sqrt(maxHealth);
+                var xpAmountHealth = Math.max(0, Math.round(hpScale * config.get().getDefaultXPGainPercentage()));
                 var getXPMapping = xpMap.getOrDefault(entity.getNPCTypeId(), Math.toIntExact(xpAmountHealth));
-                double levelScale = Math.pow(mobLevel.level, config.get().getMobLevelMultiplier());
-                long base = config.get().isUseConfigXPMappingsInsteadOfHealthDefaults()
+                var levelScale = Math.pow(mobLevel.level, config.get().getMobLevelMultiplier());
+                var base = config.get().isUseConfigXPMappingsInsteadOfHealthDefaults()
                     ? (long) (getXPMapping)
                     : xpAmountHealth;
-                long xpAmount = Math.round(base * levelScale);
+                var xpAmount = Math.round(base * levelScale);
                 if (xpAmount <= 0)
                     return;
                 store.getExternalData().getWorld().execute(() -> {

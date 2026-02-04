@@ -41,7 +41,7 @@ public class MobLevelingUtil {
         return CoreLevelMode.fromString(modeStr)
             .map(mode -> switch (mode) {
                 case SPAWN_ONLY ->
-                    registry.get(npc.getUuid()).level;
+                    computeSpawnLevel(npc);
                 case NEARBY_PLAYERS_MEAN ->
                     computeNearbyPlayersMeanLevel(transform, store);
                 case BIOME ->
@@ -58,12 +58,17 @@ public class MobLevelingUtil {
             });
     }
 
-    public static void applyMobScaling(Config<GUIConfig> config, NPCEntity npc, int level, Store<EntityStore> store) {
+    public static boolean applyMobScaling(
+        Config<GUIConfig> config,
+        NPCEntity npc,
+        int level,
+        Store<EntityStore> store
+    ) {
+        if (npc.getReference() == null)
+            return false;
+
         store.getExternalData().getWorld().execute(() -> {
             var healthMult = 1F + ((float) level - 1F) * config.get().getMobHealthMultiplier();
-
-            if (npc.getReference() == null)
-                return;
             var stats = store.getComponent(npc.getReference(), EntityStatMap.getComponentType());
             var healthIndex = DefaultEntityStatTypes.getHealth();
             var modifier = new StaticModifier(
@@ -71,11 +76,12 @@ public class MobLevelingUtil {
                 StaticModifier.CalculationType.ADDITIVE,
                 healthMult
             );
-            var modifierKey = "LevelingCore_mob_health";
-            stats.putModifier(healthIndex, modifierKey, modifier);
+            stats.putModifier(healthIndex, "LevelingCore_mob_health", modifier);
             stats.maximizeStatValue(EntityStatMap.Predictable.SELF, DefaultEntityStatTypes.getHealth());
             stats.update();
         });
+
+        return true;
     }
 
     public static int computeSpawnLevel(NPCEntity npc) {
@@ -132,7 +138,6 @@ public class MobLevelingUtil {
         var count = 0;
         final var nearbyRadius = 40f;
         final float nearbyRadiusSq = nearbyRadius * nearbyRadius;
-        final var fallbackNoPlayers = 5;
         var lvlOpt = LevelingCoreApi.getLevelServiceIfPresent();
         if (lvlOpt == null || lvlOpt.isEmpty()) {
             return 5;
@@ -149,7 +154,7 @@ public class MobLevelingUtil {
         }
 
         if (count == 0)
-            return fallbackNoPlayers;
+            return 5;
 
         var mean = (double) sum / (double) count;
         return (int) Math.round(mean);

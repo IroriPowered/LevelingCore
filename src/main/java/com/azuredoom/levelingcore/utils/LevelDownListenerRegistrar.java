@@ -69,10 +69,7 @@ public class LevelDownListenerRegistrar {
                             }
                             var totalFromLeveling = Math.max(0, newLevel * pointsPerLevel);
 
-                            levelService1.setAbilityPoints(
-                                playerId,
-                                levelService1.getLevel(playerId) == 1 ? pointsPerLevel : totalFromLeveling
-                            );
+                            levelService1.setAbilityPoints(playerId, totalFromLeveling);
                             levelService1.setUsedAbilityPoints(playerId, 0);
                             levelService1.setStr(playerId, 0);
                             levelService1.setAgi(playerId, 0);

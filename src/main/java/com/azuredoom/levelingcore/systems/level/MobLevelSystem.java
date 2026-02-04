@@ -128,9 +128,20 @@ public class MobLevelSystem extends EntityTickingSystem<EntityStore> {
                         data.level = newLevel;
                     }
 
+                    if (!data.locked) {
+                        data.level = Math.max(
+                            1,
+                            Math.min(
+                                mobMaxLevel,
+                                MobLevelingUtil.computeDynamicLevel(config, npc, transform, store1)
+                            )
+                        );
+                    }
+
                     if (data.level != data.lastAppliedLevel) {
-                        MobLevelingUtil.applyMobScaling(config, npc, data.level, store1);
-                        data.lastAppliedLevel = data.level;
+                        if (MobLevelingUtil.applyMobScaling(config, npc, data.level, store1)) {
+                            data.lastAppliedLevel = data.level;
+                        }
                     }
 
                     processed++;
