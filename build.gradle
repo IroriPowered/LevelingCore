@@ -49,6 +49,8 @@ dependencies {
     compileOnly 'curse.maven:partyinfo-1429469:7526614'
     compileOnly 'curse.maven:partypro-1438292:7529599'
     runtimeOnly 'curse.maven:partypro-1438292:7529599'
+    compileOnly "curse.maven:hyui-1431415:7567866"
+    runtimeOnly "curse.maven:hyui-1431415:7567866"
     //compileOnly fileTree(dir: "$rootDir/libs", include: ["*.jar"])
     //runtimeOnly fileTree(dir: "$rootDir/libs", include: ["*.jar"])
     // Needed libs
@@ -305,6 +307,7 @@ if (keyPropsFile.exists()) {
             ]
 
             def optionalDeps = [
+                    "hyui",
                     "partypro",
                     "party-info",
                     "better-modlist",
