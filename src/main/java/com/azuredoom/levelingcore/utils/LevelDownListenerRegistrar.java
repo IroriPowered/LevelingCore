@@ -1,5 +1,6 @@
 package com.azuredoom.levelingcore.utils;
 
+import com.azuredoom.levelingcore.ui.hud.XPBarHud;
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.protocol.SoundCategory;
 import com.hypixel.hytale.server.core.asset.type.soundevent.config.SoundEvent;
@@ -84,6 +85,7 @@ public class LevelDownListenerRegistrar {
 
                         // Need to clear out mapping whenever a player levels down as well
                         LevelUpListenerRegistrar.clear(player.getUuid());
+                        XPBarHud.updateHud(playerRef);
                     })));
             }
         });
