@@ -68,51 +68,75 @@ public class HyUICompat {
         PageBuilder.pageForPlayer(playerRef)
             .loadHtml("Pages/LevelingCore/statspage.html", template)
             .addEventListener("AddStr", CustomUIEventBindingType.Activating, (data, ctx) -> {
-                if (levelService.getAvailableAbilityPoints(uuid) <= 0) return;
+                if (levelService.getAvailableAbilityPoints(uuid) <= 0)
+                    return;
                 levelService.setStr(uuid, levelService.getStr(uuid) + 1);
                 levelService.useAbilityPoints(uuid, 1);
                 template.setVariable("ability_points", levelService.getAvailableAbilityPoints(uuid));
-                template.setVariable("strength", CommandLang.STR.param("points", levelService.getStr(uuid)).getAnsiMessage());
+                template.setVariable(
+                    "strength",
+                    CommandLang.STR.param("points", levelService.getStr(uuid)).getAnsiMessage()
+                );
                 ctx.updatePage(false);
             })
             .addEventListener("AddAgi", CustomUIEventBindingType.Activating, (data, ctx) -> {
-                if (levelService.getAvailableAbilityPoints(uuid) <= 0) return;
+                if (levelService.getAvailableAbilityPoints(uuid) <= 0)
+                    return;
                 levelService.setAgi(uuid, levelService.getAgi(uuid) + 1);
                 levelService.useAbilityPoints(uuid, 1);
                 template.setVariable("ability_points", levelService.getAvailableAbilityPoints(uuid));
-                template.setVariable("agility", CommandLang.AGI.param("points", levelService.getAgi(uuid)).getAnsiMessage());
+                template.setVariable(
+                    "agility",
+                    CommandLang.AGI.param("points", levelService.getAgi(uuid)).getAnsiMessage()
+                );
                 ctx.updatePage(false);
             })
             .addEventListener("AddPer", CustomUIEventBindingType.Activating, (data, ctx) -> {
-                if (levelService.getAvailableAbilityPoints(uuid) <= 0) return;
+                if (levelService.getAvailableAbilityPoints(uuid) <= 0)
+                    return;
                 levelService.setPer(uuid, levelService.getPer(uuid) + 1);
                 levelService.useAbilityPoints(uuid, 1);
                 template.setVariable("ability_points", levelService.getAvailableAbilityPoints(uuid));
-                template.setVariable("perception", CommandLang.PER.param("points", levelService.getPer(uuid)).getAnsiMessage());
+                template.setVariable(
+                    "perception",
+                    CommandLang.PER.param("points", levelService.getPer(uuid)).getAnsiMessage()
+                );
                 ctx.updatePage(false);
             })
             .addEventListener("AddVit", CustomUIEventBindingType.Activating, (data, ctx) -> {
-                if (levelService.getAvailableAbilityPoints(uuid) <= 0) return;
+                if (levelService.getAvailableAbilityPoints(uuid) <= 0)
+                    return;
                 levelService.setVit(uuid, levelService.getVit(uuid) + 1);
                 levelService.useAbilityPoints(uuid, 1);
                 template.setVariable("ability_points", levelService.getAvailableAbilityPoints(uuid));
-                template.setVariable("vitality", CommandLang.VIT.param("points", levelService.getVit(uuid)).getAnsiMessage());
+                template.setVariable(
+                    "vitality",
+                    CommandLang.VIT.param("points", levelService.getVit(uuid)).getAnsiMessage()
+                );
                 ctx.updatePage(false);
             })
             .addEventListener("AddInt", CustomUIEventBindingType.Activating, (data, ctx) -> {
-                if (levelService.getAvailableAbilityPoints(uuid) <= 0) return;
+                if (levelService.getAvailableAbilityPoints(uuid) <= 0)
+                    return;
                 levelService.setInt(uuid, levelService.getInt(uuid) + 1);
                 levelService.useAbilityPoints(uuid, 1);
                 template.setVariable("ability_points", levelService.getAvailableAbilityPoints(uuid));
-                template.setVariable("intelligence", CommandLang.INT.param("points", levelService.getInt(uuid)).getAnsiMessage());
+                template.setVariable(
+                    "intelligence",
+                    CommandLang.INT.param("points", levelService.getInt(uuid)).getAnsiMessage()
+                );
                 ctx.updatePage(false);
             })
             .addEventListener("AddCon", CustomUIEventBindingType.Activating, (data, ctx) -> {
-                if (levelService.getAvailableAbilityPoints(uuid) <= 0) return;
+                if (levelService.getAvailableAbilityPoints(uuid) <= 0)
+                    return;
                 levelService.setCon(uuid, levelService.getCon(uuid) + 1);
                 levelService.useAbilityPoints(uuid, 1);
                 template.setVariable("ability_points", levelService.getAvailableAbilityPoints(uuid));
-                template.setVariable("constitution", CommandLang.CON.param("points", levelService.getCon(uuid)).getAnsiMessage());
+                template.setVariable(
+                    "constitution",
+                    CommandLang.CON.param("points", levelService.getCon(uuid)).getAnsiMessage()
+                );
                 ctx.updatePage(false);
             })
             .enableAsyncImageLoading(true)
