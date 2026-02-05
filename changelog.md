@@ -1,3 +1,11 @@
+v0.9.3
+- Fixed a bug where the StatsPerLevel config option could be lower than 5
+- Fixed issues with MultipleHUD 1.0.4 compatibility
+- Added percentage to XP needed in stats screen
+- Added optional support for HyUI for the stats screen (This is a new screen that only shows if HyUI is installed)
+- Added a new item, Tome of Skills. This item opens the stats screen for the player that holds it.
+- Added a percentage amount if the show XP needed config option is enabled.
+
 v0.9.2
 
 ***WARNING: THIS VERSION CHANGES THE CONFIG LOCATION PLEASE BACK UP YOUR OLD CONFIG BEFORE UPDATING***
