@@ -23,8 +23,8 @@ import javax.annotation.Nonnull;
 
 import com.azuredoom.levelingcore.LevelingCore;
 import com.azuredoom.levelingcore.api.LevelingCoreApi;
-import com.azuredoom.levelingcore.compat.PartyPluginCompat;
-import com.azuredoom.levelingcore.compat.PartyProCompat;
+import com.azuredoom.levelingcore.compat.party.PartyPluginCompat;
+import com.azuredoom.levelingcore.compat.party.PartyProCompat;
 import com.azuredoom.levelingcore.config.GUIConfig;
 import com.azuredoom.levelingcore.lang.CommandLang;
 import com.azuredoom.levelingcore.ui.hud.XPBarHud;

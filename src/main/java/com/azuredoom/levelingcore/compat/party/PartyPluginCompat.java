@@ -1,4 +1,4 @@
-package com.azuredoom.levelingcore.compat;
+package com.azuredoom.levelingcore.compat.party;
 
 import com.carsonk.partyplugin.party.PartyManager;
 import com.hypixel.hytale.server.core.universe.PlayerRef;

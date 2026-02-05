@@ -11,7 +11,7 @@ import org.checkerframework.checker.nullness.compatqual.NonNullDecl;
 
 import java.util.WeakHashMap;
 
-import com.azuredoom.levelingcore.compat.PartyProCompat;
+import com.azuredoom.levelingcore.compat.party.PartyProCompat;
 import com.azuredoom.levelingcore.config.GUIConfig;
 import com.azuredoom.levelingcore.level.LevelServiceImpl;
 
