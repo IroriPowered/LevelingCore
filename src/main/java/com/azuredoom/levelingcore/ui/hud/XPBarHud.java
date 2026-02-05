@@ -51,12 +51,18 @@ public class XPBarHud extends CustomUIHud {
         var xpIntoLevel = currentXp - xpForCurrentLevel;
         var xpNeededThisLevel = xpForNextLevel - xpForCurrentLevel;
         var progress = (double) xpIntoLevel / xpNeededThisLevel;
+        var percentage = (float) currentXp / xpForNextLevel * 100;
 
         uiCommandBuilder.set("#ProgressBar.Value", progress);
         if (config.get().isShowXPAmountInHUD()) {
             uiCommandBuilder.set(
                 "#Level.TextSpans",
-                Message.raw("LVL: " + currentLevel + "   " + "XP: " + currentXp + " / " + xpForNextLevel)
+                Message.raw(
+                    "LVL: " + currentLevel + "   " + "XP: " + currentXp + " / " + xpForNextLevel + " (" + String.format(
+                        "%.1f",
+                        percentage
+                    ) + "%)"
+                )
             );
         } else {
             uiCommandBuilder.set(
