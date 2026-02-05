@@ -283,6 +283,12 @@ public class GUIConfig {
             (exConfig, extraInfo) -> exConfig.mobLevelMultiplier
         )
         .add()
+        .append(
+            new KeyedCodec<String>("MobNameplate", Codec.STRING),
+            (exConfig, aString, extraInfo) -> exConfig.mobNameplate = aString,
+            (exConfig, extraInfo) -> exConfig.mobNameplate
+        )
+        .add()
         .build();
 
     private boolean enableXPLossOnDeath = false;
@@ -374,6 +380,8 @@ public class GUIConfig {
     private boolean showMobLvls = true;
 
     private double mobLevelMultiplier = 0.35;
+
+    private String mobNameplate = " [Lvl {level}]";
 
     public GUIConfig() {}
 
@@ -630,5 +638,9 @@ public class GUIConfig {
 
     public double getMobLevelMultiplier() {
         return mobLevelMultiplier;
+    }
+
+    public String getMobNameplate() {
+        return mobNameplate;
     }
 }
