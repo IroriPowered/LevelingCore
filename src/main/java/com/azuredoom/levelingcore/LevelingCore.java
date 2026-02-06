@@ -1,5 +1,6 @@
 package com.azuredoom.levelingcore;
 
+import com.hypixel.hytale.common.plugin.PluginIdentifier;
 import com.hypixel.hytale.logger.HytaleLogger;
 import com.hypixel.hytale.server.core.HytaleServer;
 import com.hypixel.hytale.server.core.event.events.player.PlayerDisconnectEvent;
@@ -7,6 +8,7 @@ import com.hypixel.hytale.server.core.event.events.player.PlayerReadyEvent;
 import com.hypixel.hytale.server.core.modules.interaction.interaction.config.Interaction;
 import com.hypixel.hytale.server.core.plugin.JavaPlugin;
 import com.hypixel.hytale.server.core.plugin.JavaPluginInit;
+import com.hypixel.hytale.server.core.plugin.PluginManager;
 import com.hypixel.hytale.server.core.util.Config;
 
 import java.nio.file.Path;
@@ -20,6 +22,7 @@ import javax.annotation.Nonnull;
 
 import com.azuredoom.levelingcore.api.LevelingCoreApi;
 import com.azuredoom.levelingcore.commands.*;
+import com.azuredoom.levelingcore.compat.placeholderapi.PlaceholderAPICompat;
 import com.azuredoom.levelingcore.config.GUIConfig;
 import com.azuredoom.levelingcore.config.internal.ConfigBootstrap;
 import com.azuredoom.levelingcore.config.internal.ConfigManager;
@@ -110,9 +113,9 @@ public class LevelingCore extends JavaPlugin {
 
     @Override
     protected void start() {
-        // if (PluginManager.get().getPlugin(new PluginIdentifier("HelpChat", "PlaceholderAPI")) != null) {
-        // new LevelingCoreExpansion().register();
-        // }
+        if (PluginManager.get().getPlugin(new PluginIdentifier("HelpChat", "PlaceholderAPI")) != null) {
+            PlaceholderAPICompat.register();
+        }
 
         // if (PluginManager.get().getPlugin(new PluginIdentifier("PlaceholderLib", "PlaceholderLib")) != null) {
         // PlaceholderLibCompat.register();

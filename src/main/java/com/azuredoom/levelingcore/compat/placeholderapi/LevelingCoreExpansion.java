@@ -11,7 +11,7 @@ public class LevelingCoreExpansion extends PlaceholderExpansion {
 
     @Override
     public @NotNull String getIdentifier() {
-        return "LevelingCore";
+        return "levelingcore";
     }
 
     @Override
@@ -21,9 +21,10 @@ public class LevelingCoreExpansion extends PlaceholderExpansion {
 
     @Override
     public @NotNull String getVersion() {
-        return "0.9.4";
+        return "0.9.5";
     }
 
+    @Override
     public boolean persist() {
         return true;
     }
@@ -34,14 +35,40 @@ public class LevelingCoreExpansion extends PlaceholderExpansion {
         if (levelService == null) {
             return null;
         }
-        if (params.equalsIgnoreCase("levelingcore_level")) {
+        if (params.equalsIgnoreCase("level")) {
             return String.valueOf(levelService.getLevel(playerRef.getUuid()));
         }
-        if (params.equalsIgnoreCase("levelingcore_xp")) {
+        if (params.equalsIgnoreCase("xp")) {
             return String.valueOf(levelService.getXp(playerRef.getUuid()));
         }
-        if (params.equalsIgnoreCase("player_name")) {
-            return playerRef.getUsername();
+        if (params.equalsIgnoreCase("xp_to_level")) {
+            return String.valueOf(levelService.getXpForLevel(levelService.getLevel(playerRef.getUuid()) + 1));
+        }
+        // Ability Points
+        if (params.equalsIgnoreCase("ability_points")) {
+            return String.valueOf(levelService.getAvailableAbilityPoints(playerRef.getUuid()));
+        }
+        if (params.equalsIgnoreCase("available_ability_points")) {
+            return String.valueOf(levelService.getAvailableAbilityPoints(playerRef.getUuid()));
+        }
+        // Stats
+        if (params.equalsIgnoreCase("str")) {
+            return String.valueOf(levelService.getStr(playerRef.getUuid()));
+        }
+        if (params.equalsIgnoreCase("agi")) {
+            return String.valueOf(levelService.getAgi(playerRef.getUuid()));
+        }
+        if (params.equalsIgnoreCase("per")) {
+            return String.valueOf(levelService.getPer(playerRef.getUuid()));
+        }
+        if (params.equalsIgnoreCase("vit")) {
+            return String.valueOf(levelService.getVit(playerRef.getUuid()));
+        }
+        if (params.equalsIgnoreCase("int")) {
+            return String.valueOf(levelService.getInt(playerRef.getUuid()));
+        }
+        if (params.equalsIgnoreCase("con")) {
+            return String.valueOf(levelService.getCon(playerRef.getUuid()));
         }
         return null;
     }
