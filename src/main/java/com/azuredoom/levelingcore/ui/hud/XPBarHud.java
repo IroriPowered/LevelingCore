@@ -45,14 +45,11 @@ public class XPBarHud extends CustomUIHud {
         if (!config.get().isEnableXPBarUI())
             return;
         var uuid = getPlayerRef().getUuid();
-        var currentXp = levelServiceImpl.getXp(uuid);
         var currentLevel = levelServiceImpl.getLevel(uuid);
-        var xpForCurrentLevel = levelServiceImpl.getXpForLevel(currentLevel);
-        var xpForNextLevel = levelServiceImpl.getXpForLevel(currentLevel + 1);
-        var xpIntoLevel = currentXp - xpForCurrentLevel;
-        var xpNeededThisLevel = xpForNextLevel - xpForCurrentLevel;
-        var progress = (double) xpIntoLevel / xpNeededThisLevel;
-        var percentage = (float) currentXp / xpForNextLevel * 100;
+        var currentXp = levelServiceImpl.getXp(uuid) - levelServiceImpl.getXpForLevel(currentLevel);
+        var xpForNextLevel = levelServiceImpl.getXpForLevel(levelServiceImpl.getLevel(uuid) + 1) - levelServiceImpl.getXpForLevel(currentLevel);
+        var progress = (double) currentXp / xpForNextLevel;
+        var percentage = (float) levelServiceImpl.getXp(uuid) / levelServiceImpl.getXpForLevel(levelServiceImpl.getLevel(uuid) + 1) * 100;
 
         uiCommandBuilder.set("#ProgressBar.Value", progress);
         if (config.get().isShowXPAmountInHUD()) {
