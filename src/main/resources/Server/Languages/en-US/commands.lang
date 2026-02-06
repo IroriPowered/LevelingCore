@@ -6,6 +6,7 @@ levelingcore.leveldown = Level Down! You are now level {level}
 levelingcore.deathalllevels = You died and lost all levels!
 levelingcore.minleveldeath = You are already at the minimum XP for level {level}
 levelingcore.addlevel.maxlevelreached = Level value is above max level configuration! Level not changed
+levelingcore.addlevel.canremovelevelzero = Can not process, resulting level for {player} would be 0 or lower!
 levelingcore.abilitypoints = You now have {ability_points} stat points. Use /showstats or Tome of Skills to allocate points.
 levelingcore.avaliavailablitypoints = Available Stat Points: {ability_points}
 levelingcore.unknownstat = Unknown stat: {stat}
