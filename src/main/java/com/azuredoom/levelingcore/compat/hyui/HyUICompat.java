@@ -12,12 +12,12 @@ import com.hypixel.hytale.server.core.modules.entitystats.modifier.StaticModifie
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 
+import java.util.logging.Level;
+
 import com.azuredoom.levelingcore.LevelingCore;
 import com.azuredoom.levelingcore.api.LevelingCoreApi;
 import com.azuredoom.levelingcore.lang.CommandLang;
 import com.azuredoom.levelingcore.utils.StatsUtils;
-
-import java.util.logging.Level;
 
 public class HyUICompat {
 
