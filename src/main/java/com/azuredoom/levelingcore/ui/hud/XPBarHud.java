@@ -14,6 +14,7 @@ import java.util.WeakHashMap;
 import com.azuredoom.levelingcore.compat.party.PartyProCompat;
 import com.azuredoom.levelingcore.config.GUIConfig;
 import com.azuredoom.levelingcore.level.LevelServiceImpl;
+import com.azuredoom.levelingcore.utils.StatsUtils;
 
 public class XPBarHud extends CustomUIHud {
 
@@ -58,10 +59,11 @@ public class XPBarHud extends CustomUIHud {
             uiCommandBuilder.set(
                 "#Level.TextSpans",
                 Message.raw(
-                    "LVL: " + currentLevel + "   " + "XP: " + currentXp + " / " + xpForNextLevel + " (" + String.format(
-                        "%.1f",
-                        percentage
-                    ) + "%)"
+                    "LVL: " + currentLevel + "   " + "XP: " + StatsUtils.formatXp(currentXp) + " / " + StatsUtils
+                        .formatXp(xpForNextLevel) + " (" + String.format(
+                            "%.1f",
+                            percentage
+                        ) + "%)"
                 )
             );
         } else {

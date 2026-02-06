@@ -119,4 +119,12 @@ public class StatsUtils {
         playerStatMap.maximizeStatValue(EntityStatMap.Predictable.SELF, DefaultEntityStatTypes.getStamina());
         playerStatMap.maximizeStatValue(EntityStatMap.Predictable.SELF, DefaultEntityStatTypes.getMana());
     }
+
+    public static String formatXp(double value) {
+        if (value >= 1_000_000_000)
+            return String.format("%.2fB", value / 1_000_000_000);
+        if (value >= 1_000_000)
+            return String.format("%.2fM", value / 1_000_000);
+        return String.format("%.0f", value);
+    }
 }
