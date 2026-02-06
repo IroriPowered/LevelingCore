@@ -1,5 +1,6 @@
 package com.azuredoom.levelingcore.commands;
 
+import com.azuredoom.levelingcore.utils.LevelingUtil;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.server.core.command.system.CommandContext;
@@ -63,10 +64,21 @@ public class AddXpCommand extends AbstractPlayerCommand {
         playerRef = this.playerArg.get(commandContext);
         var xpRef = this.xpArg.get(commandContext);
         var playerUUID = playerRef.getUuid();
+        int maxLevel = LevelingUtil.computeMaxLevel();
+        int currentLevel = levelService.getLevel(playerUUID);
+        if (currentLevel >= maxLevel) {
+            commandContext.sendMessage(CommandLang.ADD_LEVEL_MAX_LEVEL_REACHED
+                    .param("player", playerRef.getUsername()));
+            return;
+        }
         levelService.addXp(playerUUID, xpRef);
-        var level = levelService.getLevel(playerUUID);
+        int newLevel = levelService.getLevel(playerUUID);
+        if (newLevel > maxLevel) {
+            levelService.removeLevel(playerUUID, newLevel - maxLevel);
+            newLevel = maxLevel;
+        }
         var setXPMsg = CommandLang.ADD_XP_1.param("xp", xpRef).param("player", playerRef.getUsername());
-        var levelTotalMsg = CommandLang.ADD_XP_2.param("player", playerRef.getUsername()).param("level", level);
+        var levelTotalMsg = CommandLang.ADD_XP_2.param("player", playerRef.getUsername()).param("level", newLevel);
         if (config.get().isEnableLevelAndXPTitles())
             EventTitleUtil.showEventTitleToPlayer(playerRef, levelTotalMsg, setXPMsg, true);
         commandContext.sendMessage(setXPMsg);
