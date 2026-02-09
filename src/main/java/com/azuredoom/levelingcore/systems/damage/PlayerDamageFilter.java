@@ -90,7 +90,7 @@ public class PlayerDamageFilter extends DamageEventSystem {
         var mult = conDamageMultiplier(con);
 
         if (isProjectile) {
-            damage.setAmount(incoming * mult * (baseMeelee + projectileMulti * mobLevel));
+            damage.setAmount(incoming * mult * (baseMelee + projectileMulti * mobLevel));
         } else {
             damage.setAmount(incoming * mult * (baseProjectile + meleeMulti * mobLevel));
         }
