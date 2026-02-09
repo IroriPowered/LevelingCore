@@ -84,7 +84,7 @@ public class LevelingCore extends JavaPlugin {
         LevelingCore.configPath
     );
 
-    public static final Map<Integer, Integer> apMap = StatsPerLevelMapping.loadOrCreate(LevelingCore.configPath);
+    public static final StatsPerLevelMapping statsPerLevel = new StatsPerLevelMapping(LevelingCore.configPath);
 
     public static final Map<String, Integer> mobInstanceMapping = MobInstanceMapping.loadOrCreate(
         LevelingCore.configPath
@@ -150,19 +150,20 @@ public class LevelingCore extends JavaPlugin {
                         LevelingCoreApi.getLevelServiceIfPresent().ifPresent(levelService -> {
                             var uuid = player.getUuid();
                             var level = levelService.getLevel(uuid);
-                            int expectedTotal;
+                            int targetTotal;
                             if (config.get().isUseStatsPerLevelMapping()) {
-                                var mapping = LevelingCore.apMap;
-                                expectedTotal = mapping.getOrDefault(level, 5);
+                                targetTotal = statsPerLevel.getCumulativeStatsForLevel(
+                                    level,
+                                    level * config.get().getStatsPerLevel()
+                                );
                             } else {
-                                expectedTotal = config.get().getStatsPerLevel();
+                                targetTotal = level * config.get().getStatsPerLevel();
                             }
                             var used = levelService.getUsedAbilityPoints(uuid);
                             var currentTotal = levelService.getAvailableAbilityPoints(uuid) + used;
-                            var targetTotal = Math.max(0, level * expectedTotal);
 
                             if (currentTotal != targetTotal) {
-                                levelService.setAbilityPoints(uuid, targetTotal);
+                                levelService.setAbilityPoints(uuid, Math.max(0, targetTotal));
                             }
                         });
                     }
