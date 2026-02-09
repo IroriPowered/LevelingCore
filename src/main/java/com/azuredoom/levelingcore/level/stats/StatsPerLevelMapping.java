@@ -102,6 +102,7 @@ public class StatsPerLevelMapping {
                     continue;
                 }
 
+                // Cumulative total of the points
                 total += stats;
                 out.put(lvl, total);
             }

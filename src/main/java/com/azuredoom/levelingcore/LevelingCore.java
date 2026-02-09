@@ -153,6 +153,7 @@ public class LevelingCore extends JavaPlugin {
                             int targetTotal;
                             if (config.get().isUseStatsPerLevelMapping()) {
                                 var mapping = LevelingCore.apMap;
+                                // Mapping has the total ability points for the level
                                 targetTotal = mapping.getOrDefault(level, level * config.get().getStatsPerLevel());
                             } else {
                                 targetTotal = level * config.get().getStatsPerLevel();
