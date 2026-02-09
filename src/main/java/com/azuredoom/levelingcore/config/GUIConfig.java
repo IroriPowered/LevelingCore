@@ -260,9 +260,9 @@ public class GUIConfig {
         )
         .add()
         .append(
-                new KeyedCodec<Float>("MobBaseRangeDamage", Codec.FLOAT),
-                (exConfig, aFloat, extraInfo) -> exConfig.mobBaseRangeDamage = aFloat,
-                (exConfig, extraInfo) -> exConfig.mobBaseRangeDamage
+            new KeyedCodec<Float>("MobBaseRangeDamage", Codec.FLOAT),
+            (exConfig, aFloat, extraInfo) -> exConfig.mobBaseRangeDamage = aFloat,
+            (exConfig, extraInfo) -> exConfig.mobBaseRangeDamage
         )
         .add()
         .append(
